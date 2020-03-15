@@ -1,0 +1,127 @@
+.header h2{
+    margin-top: 1%;
+    color: grey;
+
+    width: 100%;
+    text-align: center;
+}
+.operations-links{
+    height: 67%;
+}
+
+.operations-links ul{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.operations-links ul li{
+    /* causes each list element to horizontally fill any empty whitespace*/
+    flex: 1;
+    height: 100%;
+    width: 100%;
+
+}
+
+.operations-links ul li:hover{
+    /* when hovered: the height of the list element will increase to fill
+        the screen
+    */
+    background: rgba(255, 255, 255, 1)
+}
+.operations-links ul li{
+    /* Displaying flex just so I can center the link in the
+        list element vertically (might as well do it horizontally too)
+    */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.children{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-flow: 1;
+}
+
+.children a{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(240, 240, 240);
+
+}
+
+.children a:nth-child(2){
+    border-left: 1px solid grey;
+}
+
+.children a:hover, .children a:focus{
+    background-color: white;
+}
+
+.hide{
+    /* This is the ONLY place I use "!important". This is the only class named "hide" in all of 
+        my css files so nothing should be taking higher specificty than this.  */
+    display: none !important;
+    
+}
+/* .operations-links{
+height: 71%;
+
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}
+
+.operations-links ul li:hover{
+}
+
+.operations-links a{
+color: black;
+font-weight: bold;
+font-size: 24px;
+} */
+
+
+/*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+/*----------------------
+        COMPUTER SCREEN REGULAR 
+----------------------*/
+@media screen and (min-width: 768px) {
+  
+    .operations-links a{
+        font-size: 30px;
+    }
+
+
+}
+  /*---------------------- 
+        COMPUTER SCREEN LARGE 
+  ----------------------*/
+@media screen and (min-width: 1024px) {
+
+    .operations-links ul{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+
+    
+    
+
+}

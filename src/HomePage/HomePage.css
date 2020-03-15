@@ -1,0 +1,81 @@
+/* .menu-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scheduling, .operations{
+    padding: 30px 10%;
+    border: 1px solid grey;
+    margin-top:10px;
+}
+
+.scheduling h2, .operations h2{
+    margin-bottom: 10px;
+}
+
+.scheduling{
+    background-color: lightgray;
+}
+
+.operations{
+    background-color: lightgray;
+}
+
+
+.scheduling a:hover, .scheduling a:focus,
+.operations a:hover, .operations a:focus{
+    color:white;
+}
+
+.scheduling a:visited, .scheduling a:visited,
+.operations a:visited, .operations a:visited{
+    color:black;
+}
+
+
+.scheduling a:visited:hover, .scheduling a:visited:hover,
+.operations a:visited:hover, .operations a:visited:hover{
+    color:white;
+}
+
+/*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+/* ----------
+        COMPUTER SCREEN REGULAR 
+----------------------*/
+/* @media screen and (min-width: 768px) {
+    
+    .scheduling, .operations{
+        width: 400px;
+
+        
+
+        padding: 30px 50px;
+        border: 1px solid grey;
+        margin-bottom:10px;
+        
+    }
+    
+    
+} */
+  
+
+/* ---------------------- 
+        COMPUTER SCREEN LARGE 
+----------------------*/
+/* @media screen and (min-width: 1024px) {
+    
+    .scheduling, .operations{
+        width: 500px;
+
+        padding: 30px 50px;
+        border: 1px solid grey;
+        margin-bottom:10px;
+        
+    }
+    
+
+} */ 

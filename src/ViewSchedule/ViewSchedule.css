@@ -1,0 +1,51 @@
+.grid-container{
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.grid{
+    width: 100%;
+    min-width: 300px;
+}
+
+.column{
+    border-bottom: 1px dashed black;
+    overflow: hidden;
+}
+
+.row{
+    border-bottom: 1px dashed gray;
+}
+
+.alt-message{
+    padding-top: 8%;
+}
+
+
+/*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+    /* ----------
+            COMPUTER SCREEN REGULAR 
+    ----------------------*/
+    @media screen and (min-width: 768px) {
+      
+        .row, .column{
+            font-size: 24px;
+            padding: 10px;
+        }
+  
+  
+    }
+      /* ---------------------- 
+            COMPUTER SCREEN LARGE 
+      ----------------------*/
+    @media screen and (min-width: 1024px) {
+        .row, .column{
+            font-size: 30px;
+            padding: 10px;
+        }
+
+        
+  
+    }

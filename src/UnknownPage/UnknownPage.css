@@ -1,0 +1,42 @@
+.not-found{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    flex-flow: 1;
+
+    background-color: rgba(240, 240, 240);
+
+}
+.not-found header{
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.not-found h1{
+    font-size: 50px;
+    color: red;
+}
+
+.not-found section{
+    background-color: #383e42;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.not-found h2 a, .not-found h2 a:visited{
+    color: white;
+    text-decoration: none;
+}
+.not-found h2 a:focus, .not-found h2 a:hover{
+    color: grey;
+    text-decoration: underline;
+
+}
+
+.not-found span{
+    color: rgba(220, 220, 220);
+}

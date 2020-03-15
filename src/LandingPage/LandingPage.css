@@ -1,0 +1,322 @@
+ /* 
+        - Header
+*/
+.landing.header{
+
+  height: 35%
+}
+.landing.header h1{
+  /* padding-top: 2%;*/
+  padding-bottom: 5%; 
+}
+
+.landing.header a, .landing.header a:visited{
+
+    border: 1px solid black;
+    background-color: #383e42;
+    color: rgb(240,240,240);
+
+    border-radius: 5px;
+    padding: 6px;
+    width: 90px;
+
+    font-weight: bold;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.landing.header a:hover, .landing.header a:focus{
+    border: 1px solid black;
+    background-color: grey;
+    color: white;
+}
+
+.landing.header a:active{
+  text-decoration: underline;
+}
+
+.demo-info{
+  font-size: 13px;
+  color: grey;
+}
+
+/* WHOLE INFO SECTION*/
+.section-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  flex-flow: 1;
+}
+
+/* INFO SECTIONS */
+ .info {
+    min-height: 100px;
+    padding: 30px 15px;
+    max-width: 550px; 
+
+    background-color: #bbb;
+  }
+  
+  .info header{
+    padding: 25px 25px;
+    margin-bottom: 20px;
+  }
+  
+  .info:nth-child(even) {
+    background-color: lightgrey;
+  }
+
+li, li a{
+  list-style-type: none;
+  text-decoration: none;
+} 
+
+
+/*  --------------
+  toggle styles
+  ---------------- */
+  .hidden {
+    display: none;
+}
+
+/*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+/* ----------
+        COMPUTER SCREEN REGULAR 
+----------------------*/
+@media screen and (min-width: 768px) {
+ 
+  .landing-header {
+    width: 100%;
+    margin-top: 60px;
+    padding: 80px 0%;
+  }
+
+  .landing-header h1{
+      width: 100%;
+      margin-bottom: 15px;
+      text-align: center;
+  }
+}
+
+/* ---------------------- 
+      COMPUTER SCREEN LARGE 
+----------------------*/
+@media screen and (min-width: 1024px) {
+
+  .landing-header {
+    width: 100%;
+    margin-top: 5%;
+  }
+
+  .landing-header h1{
+    width: 100%;
+    margin-bottom: 15px;
+
+    text-align: center;
+  }
+
+    .section-info{
+      height: 50%;
+      overflow: hidden;
+    }
+
+  .info {
+    background-color: #bbb;
+
+    height: 100%;
+    min-height: 100px;
+    padding: 30px 15px;
+    max-width: 550px; 
+  }
+
+  .landing-header button{
+
+    font-size: 20px;
+    margin-top: 15px;
+
+
+    width: 120px;
+  }
+
+  /* SECTION INFO */
+  .section-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+
+
+/* 
+        - Header
+    */
+    /* .landing-header {
+        width: 100%;
+        margin-top: 40px;
+        padding: 60px 0%;
+      
+    }
+    
+    .landing-header h1{
+        width: 100%;
+    
+        margin-bottom: 15px;
+    
+        text-align: center;
+    }
+
+  
+    
+    .landing-header button{
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+
+        background: lightgray;
+
+        width: 90px;
+    }
+    
+    .landing-header button:hover, .landing-header button:focus,
+    .signup-box-button:hover, .signup-box-button:focus{
+        border: 1px solid grey;
+        background-color: white;
+    }
+
+     */
+
+    /* WHOLE INFO SECTION*/
+    /* .section-info{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    } */
+    
+    /* INFO SECTIONS */
+/*     
+    .info {
+        min-height: 100px;
+        padding: 30px 15px;
+        max-width: 550px;
+
+        background-color: #bbb;
+      }
+      
+      .info header{
+        padding: 25px 25px;
+        margin-bottom: 20px;
+      }
+      
+      .info:nth-child(even) {
+        background-color: lightgrey;
+      }
+    
+    li, li a{
+      list-style-type: none;
+      text-decoration: none;
+    }
+     */
+    
+    /*  --------------
+      toggle styles
+      ---------------- */
+      /* .hidden {
+        display: none;
+    } */
+
+    /*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+    /* ----------
+            COMPUTER SCREEN REGULAR 
+    ----------------------*/
+    /* @media screen and (min-width: 768px) {
+     
+      .landing-header {
+        width: 100%;
+        margin-top: 60px;
+        padding: 80px 0%;
+      
+    }
+    
+    .landing-header h1{
+        width: 100%;
+    
+        margin-bottom: 15px;
+    
+        text-align: center;
+    }
+
+      .info {
+        padding: 20px 100px 30px;
+        background-color: #bbb;
+        max-width: 700px;
+      }
+
+      .info header{
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .info p{
+        font-size: 24px;
+      }
+
+    } */
+    /* ---------------------- 
+          COMPUTER SCREEN LARGE 
+    ----------------------*/
+    /* @media screen and (min-width: 1024px) {
+  
+.landing-header {
+  width: 100%;
+  margin-top: 5%;
+  padding: 5% 0%;
+
+}
+
+.landing-header h1{
+  width: 100%;
+
+  margin-bottom: 15px;
+
+  text-align: center;
+}
+
+.info {
+  background-color: #bbb;
+  width: 80%;
+  max-width: 1500px;
+
+  padding: 2% 16% 4%;
+}
+
+.info header{
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.info p{
+  font-size: 24px;
+}
+
+.landing-header button{
+
+  font-size: 20px;
+  margin-top: 15px;
+
+
+  width: 120px;
+}
+
+  
+
+} */

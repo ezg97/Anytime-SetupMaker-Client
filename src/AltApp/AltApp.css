@@ -1,0 +1,79 @@
+*, body{
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;  
+  margin: 0;
+
+}
+
+html, body{
+  height: 100%;
+  width: 100%;
+}
+
+body {
+    font-family: "Open Sans",
+    sans-serif;
+    font-size: 20px;
+    /* background-color: #f8f8f8; */
+    background-color: rgb(240,240,240);
+
+    text-align: center;
+    line-height: 1;
+  }
+  
+
+
+/* -----------------------------
+    have to make the root id 100% height
+*/
+#root{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+/*container */
+.container{
+  height: 100%;
+  width: 100%;
+  /* border: 1px solid black; */
+  margin:0;
+  padding:0;
+}
+
+
+/* 
+    MAIN
+*/
+[role="main"] {
+  width: 100%;
+  height: 100%;
+
+  padding: 15px;
+
+  padding: 0;
+  margin: 0;
+}
+
+
+/*
+    Nav Links
+*/
+.navLink a{
+  text-decoration: none;
+  color: black;
+}
+
+  /* Must keep this above the hover/focus*/
+.navLink a:visited, .navLink a:visited{
+  color:black;
+}
+
+.navLink a:hover, .navLink a:focus{
+    color:grey;
+}
+
+.navLink a:active{
+  text-decoration: underline;
+}

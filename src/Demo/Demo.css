@@ -1,0 +1,92 @@
+    /* Every page: full height and will only show the scroll bar if needed */
+    .page-container{
+        height: 100%;
+        overflow: auto;
+    }    
+
+    /* Standard heading styling */
+    .header {
+        width: 100%;
+        height: 25%;
+        padding: 0;
+        margin-top: 10%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        border-bottom: 1px dashed gray;
+    }
+    
+    .header h1{
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    /* Styling made for any page that uses a CRUD operation */
+    .crud  .header{
+         margin-top: 15%; 
+        border-bottom: none;
+    }
+    
+    .crud .header > p{
+        margin-top:5%;
+        color: grey;
+    }
+
+    #mySelect{
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+/*-------------------------- RESPONSIVE LAYOUT --------------------------*/
+
+
+    /* ----------
+            COMPUTER SCREEN REGULAR 
+    ----------------------*/
+    @media screen and (min-width: 768px) {
+
+        .header {
+
+            margin-top: 4%;
+        }
+
+        .crud .header{
+            margin-top: 4%;
+        }
+
+        .crud .header > p{
+            margin-top:2%;
+            color: grey;
+        }
+       
+        #mySelect{
+            font-size: 20px;  
+        }
+
+    }
+
+      /* ---------------------- 
+            COMPUTER SCREEN LARGE 
+      ----------------------*/
+    @media screen and (min-width: 1024px) {
+
+        .header {
+
+            margin-top: 4%;
+        }
+
+        .crud .header{
+            margin-top: 4%;
+        }
+
+        .crud .header > p{
+            margin-top:1%;
+            color: grey;
+        }
+        
+    }
+  
+
