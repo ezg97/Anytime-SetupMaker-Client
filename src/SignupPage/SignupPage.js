@@ -47,13 +47,11 @@ class SignupPage extends React.Component{
 
 
         const {business_name, password } = this.state;
-
         AuthApiService.postUser({
             'user_name': business_name,
             'password': password,
         })
         .then( res => {
-            
             //AFTER successfully creating an account, make the call to log in
             AuthApiService.postLogin({
                 business_name: business_name,
@@ -73,6 +71,7 @@ class SignupPage extends React.Component{
             })
             .catch(err => {
                 this.showError('An error occurred while creating your account. Please reload the page');
+               // console.log('ebola ',err)
             })
             
         })
@@ -83,6 +82,8 @@ class SignupPage extends React.Component{
             }
             else{
                 this.showError('An error occurred while creating your account. Please reload the page');
+               // console.log('corona ',err)
+
             }
         })
     }

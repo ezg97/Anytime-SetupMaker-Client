@@ -25,7 +25,7 @@ class ViewSchedule extends React.Component{
    constructor(props){
         super(props);
         this.state = {
-            schedule: []
+            setup: []
         };
     }
 
@@ -54,68 +54,74 @@ class ViewSchedule extends React.Component{
 
     */
     async componentDidMount(){
-
+        console.log('- - - mounted');
         //must use try/catch for async calls
         try{
             //console.log(' --- START AWAIT')
             //await the response (aka resolve) from checkFetch
             let fetched = await this.context.checkFetch();
+            console.log('- - - fetched');
+            console.log('fetch: ',fetched)
 
             //console.log('ITEMS HAVE BEEN FETCHED: ',fetched,this.context.employeeData)
 
             //Finally can pass the context to the function
-            let newSchedule = logic.scheduleAlgo(this.context.employeeData, this.context.laborData, this.context.dayData);
+            let newSetup = logic.setupAlgo(this.context.employeeData, this.context.positionData, this.context.dayData);
+            console.log('- - - received');
 
+
+            console.log('SETUP: ', newSetup)
 
             this.setState({
-                schedule: newSchedule
+                setup: newSetup
             });
 
         } catch (err){
-            //console.log('ERROR in PROMISE: ',err)
+            // console.log('ERROR in PROMISE: ',err)
         }
+
+        
 
     }
     
     render(){
 
-        let selectedDay = this.props.selectedDay;
-
-        let businesses = this.context.businessData;        
+        let selectedHour = this.props.selectedHour;
+        let business = this.context.businessData;  
+        let operationHours = this.context.dayData;      
        
 
         return(
             
         <div className='grid-container'>
-            {(selectedDay != 'None')
+
+            {(selectedHour != 'None')
             ?<Container className="grid" fluid style={{ lineHeight: '32px'}}>
                 <Row className='column'>
+                    <Col>Position:</Col> 
                     <Col>Employee:</Col>
-                    <Col>{selectedDay}:</Col>
                    
                 </Row>
+
                 <br />
-                {this.state.schedule.map(employee => 
-                    (employee)
-                        ?<Row className='row'>
-                                <Col>{employee.name}</Col>
-                                <Col>{selectedDay==="Sun"?
-                                        employee.sunday:selectedDay==="Mon"?
-                                        employee.monday:selectedDay==="Tues"?
-                                        employee.tuesday:selectedDay==="Wed"?
-                                        employee.wednesday:selectedDay==="Thurs"?
-                                        employee.thursday:selectedDay==="Fri"?
-                                        employee.friday:selectedDay==="Sat"?
-                                        employee.saturday:null
-                                    }</Col>
-                        </Row>
-                        :null)
-                }
+
+                {this.state.setup.map((hour,id) => 
+                    (id + parseInt(operationHours[0].open_time) == parseInt(selectedHour))
+                        ?hour.map(obj =>
+                            <Row className='row'>
+                                <Col>{obj.pos}</Col>
+                                <Col>{obj.emp}</Col>
+                            </Row>  
+                            
+                        )
+                        :null
+                       
+                )}
                     
                 
             </Container>
             :<div className='alt-message'>
-                <h2>No day selected.</h2>
+                <h2>No hour selected.</h2>
             </div>}
         </div>
         );

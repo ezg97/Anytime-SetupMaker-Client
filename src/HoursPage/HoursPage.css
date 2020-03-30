@@ -8,10 +8,12 @@
 
 }
 
-#hours{
+.hours{
     padding: 5px;
     font-size: 14px;
     width: 250px;
+    cursor: pointer;
+
 }
 
 
@@ -27,7 +29,7 @@
             font-size: 18px;
 
         }
-        #hours{
+        .hours{
             font-size: 18px;
         }
         
@@ -36,7 +38,7 @@
             COMPUTER SCREEN LARGE 
       ----------------------*/
     @media screen and (min-width: 1024px) {
-        #hours{
+        .hours{
             font-size: 20px;
         }
     }

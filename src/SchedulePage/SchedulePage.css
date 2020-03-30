@@ -1,0 +1,184 @@
+.display-list-positions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    border-bottom: 1px solid grey;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.list-stle{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.display-list-employees{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    flex-wrap: wrap;
+}
+
+.list-element{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+
+    padding: 5px;
+    /* separation between buttons */
+    margin-left: 30px;
+}
+
+.pos-requirement-button{
+    height: 14px;
+    width: 14px;
+
+    border-radius: 50%;
+
+    border: 1px solid black;
+    background-color: white;
+
+    /* separation between the button and text */
+    margin-right: 5px;
+
+    cursor: pointer;
+
+}
+
+.emp-requirement-button{
+    height: 14px;
+    width: 14px;
+
+    border-radius: 50%;
+
+    border: 1px solid black;
+    background-color: white;
+
+    /* separation between the button and text */
+    margin-right: 5px;
+
+    cursor: pointer;
+}
+
+.emp-requirement-button:hover, .emp-requirement-button:focus,
+.pos-requirement-button:hover, .pos-requirement-button:focus{
+    background-color: grey;
+}
+
+
+
+.clicked{
+    background-color: lime;
+}
+
+.scheduler-hours{
+    padding: 5px;
+    font-size: 14px;
+
+    border: 1px solid grey;
+
+    cursor: pointer;
+
+}
+
+.scheduler-hours:hover, .scheduler-hours:focus{
+    background: grey;
+}
+
+.emp-name{
+    padding: 5px;
+
+    font-size: 18px;
+    border: 1px solid black;
+
+    /* border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px; */
+
+    background-color: rgb(240,240,240);
+}
+
+.text-style{
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+
+.shift-text:nth-child(1){
+    text-align: center;
+    width: 60%;
+    padding-left: 40px;
+
+}
+.shift-text:nth-child(2){
+    width: 40%;
+    text-align: start;
+    padding-left: 10px;
+
+}
+
+
+.message{
+    padding-bottom: 10px;
+}
+
+/*---------------- RESPONSIVE LAYOUT ----------------*/
+
+
+    /* ----------
+            COMPUTER SCREEN REGULAR 
+    ----------------------*/
+    @media screen and (min-width: 768px) {
+        .scheduler-hours{
+            font-size: 18px;
+        }
+
+        .emp-name{
+            padding: 5px;
+        
+            font-size: 22px;
+        
+        }
+        
+    }
+      /* ---------------------- 
+            COMPUTER SCREEN LARGE 
+      ----------------------*/
+    @media screen and (min-width: 1024px) {
+        .scheduler-hours{
+            font-size: 20px;
+        }
+
+        .emp-name{
+            padding: 5px;
+        
+            font-size: 24px;
+            
+        }
+
+        .shift-text:nth-child(1){
+            text-align: center;
+            width: 60%;
+        }
+        .shift-text:nth-child(2){
+            width: 40%;
+            text-align: start;
+            padding-left: 10px;
+        
+        }
+    }
+  

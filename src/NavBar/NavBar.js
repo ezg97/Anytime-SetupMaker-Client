@@ -42,13 +42,13 @@ class NavBar extends React.Component{
 
             /* IF NOT SIGNED IN */
             ?<ul className='navbar navLink'>
-              <li> <NavLink to="/demo">Anytime Scheduler</NavLink> </li>
+              <li> <NavLink to="/demo">Anytime SetupMaker</NavLink> </li>
               <li> <NavLink to="/login">Log In</NavLink> </li>
             </ul>
 
             /* IF SIGNED IN */
             :<ul className='navbar navLink'>
-                <li> <NavLink to="/home">Anytime Scheduler</NavLink> </li>
+                <li> <NavLink to="/home">Anytime SetupMaker</NavLink> </li>
                 <li className='logos'>
                     <span className='home'> <NavLink to="/home">&#8962;</NavLink> </span>
                     <span className='log-out' onClick={() => this.logout()}> <NavLink to="/">&#10162;</NavLink> </span>

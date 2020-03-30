@@ -9,9 +9,8 @@ import TokenService from '../services/token-service'
 import config from '../config'
 
 
-const { SelectDayWidget } = require('../SelectDayWidget/SelectDayWidget');
-const { hours } = require('../Hours');
-const { days } = require('../Days');
+const { hoursPM, hoursAM } = require('../Hours');
+
 
 
 
@@ -33,18 +32,12 @@ class HoursPage extends React.Component{
         super(props);
         this.state = {
             index: 0,
-            day: '',
-            open_time: '0',
-            close_time: '0',
-            dayExists: false,
+            open_time: -1,
+            close_time: -1,
             messageClass:'message hide',
             alertMessage: '',
         };
     }
-
-
-    
-
 
     /* 
         ---------------------------------
@@ -65,170 +58,112 @@ class HoursPage extends React.Component{
         });
     }
 
-
-    handleSelectedDay = (val) => {
-        this.clearAlert();
-
-        let updateHour = false;
-
-        //if the data is an empty list (because it's a new account)
-        if(this.context.dayData.length>0){
-            this.context.dayData.forEach(obj => {
-                //if the database table contains info on the slected day
-                if(obj.day===val){
-                    this.setState({
-                        index: obj.id,
-                        day: val,
-                    });
-             
-                    this.updateOpenTime(obj.open_time);
-                    this.updateCloseTime(obj.close_time);
-
-                    updateHour = true;
-                }
-               
-            });
-            //executed if the database contains info, but not on the selected day
-            if(updateHour === false){
-                this.updateCloseTime('0');
-                this.updateOpenTime('0');
-                this.setState({
-                    day: val,
-                });
-            }
-        }
-        //if no data exists yet (new account)
-        else{
-            this.setState({
-                day: val
-            });
-        }
-
-        if(val === "None"){
-            this.setState({day: ''});
-        }
-    }
-
     updateOpenTime = (val) => {
         this.clearAlert();
 
-        if(val != "0"){
-            this.setState({open_time: val});
+        let armyTime=-1;
+
+        if(val.includes('AM')){
+            armyTime = parseInt( val.split('AM') );
+            //12AM for opening will result to "12", the below is the solution
+            if(armyTime===12){
+                armyTime=0;
+            }
+        }
+        if(val.includes('PM')){
+            armyTime = 12 + parseInt( val.split('PM') );
+            //12pm will perform "12=12 = 24", the below is the solution
+            if(armyTime === 24){
+                armyTime = 12;
+            }
+        }
+
+        console.log('open time val: ',val);
+        console.log('open time army: ',armyTime);
+
+        if(armyTime != -1){
+            this.setState({open_time: armyTime});
         }
         else{
-            this.setState({open_time: '0'});
+            this.setState({open_time: -1});
         }
     }
 
     updateCloseTime = (val) => {
         this.clearAlert();
 
-        if(val != "0"){
-            this.setState({close_time: val});
+        let armyTime=-1;
+
+        if(val.includes('AM')){
+            armyTime = parseInt( val.split('AM') );
+            //12AM for closing will result to "12", the below is the solution
+            if(armyTime===12){
+                armyTime=24;
+            }
+        }
+        if(val.includes('PM')){
+            armyTime = 12 + parseInt( val.split('PM') );
+            //12pm will perform "12=12 = 24", the below is the solution
+            if(armyTime === 24){
+                armyTime = 12;
+            }
+        }
+
+        console.log('close time army: ',armyTime)
+        console.log('close time val: ',val);
+
+        if(armyTime != -1){
+            this.setState({close_time: armyTime});
         }
         else{
-            this.setState({close_time: '0'});
+            this.setState({close_time: -1});
         }
     }
-
-    updateDayExists = (bool) => {
-        if(bool===true){
-            this.setState({
-                dayExists: true
-            });
-        }
-        else{
-            this.setState({
-                dayExists: false
-            });
-        }
-
-    }
-
 
     handleSubmit = (event) => {
         event.preventDefault();
 
-        if(this.state.day===''){
-            this.showAlert('Error: Must select a day.');
-            return;
-        }
-        
+        const {open_time, close_time } = this.state;
 
-        const {day, open_time, close_time } = this.state;
-
-        let openHour = ( parseInt(open_time.split('AM'))  || parseInt( open_time.split('PM')) );
-        let closeHour = ( parseInt(close_time.split('AM')) || parseInt(close_time.split('PM')) );
-
-        let openMidday = open_time.includes('AM')? 'AM':'PM';
-        let closeMidday = close_time.includes('AM')? 'AM':'PM';
-
-        //set the day to be existing, so that if the opening and closing hours flags an error, it won't update
-        let dayExists=true;
-        this.updateDayExists(true);
-
-
-        if( 
-            ( openHour < closeHour && openMidday === 'AM' && closeMidday === 'AM' && closeHour !== 12 )
-            ||
-            ( openHour < closeHour && openMidday === 'PM' && closeMidday === 'PM' && closeHour !== 12 && openHour !== 0)
-            ||
-            ( openHour > closeHour && openMidday === 'PM' && closeMidday === 'PM' && openHour === 12 && closeHour !== 0 )
-            ||
-            ( openMidday === 'AM' && closeMidday === "PM" && closeHour !== 0 )
-            ||
-            ( open_time === '0' && close_time === '0' )
-        ){
-
-            // The hours are acceptable, however we will set to false as default and if the day 
-            // does exist, then it will be overrided to true
-            dayExists = false;
-            this.updateDayExists(false);
+        //if closes before it opens AND open AND close are not closed. OR they are both closed. 
+        if( ( close_time > open_time && close_time != -1 && open_time != -1) || ( open_time === -1 && close_time === -1) ){
 
             this.clearAlert();
-
 
             //if the operation data contains any data
             if( (this.context.dayData? this.context.dayData.length : null) > 0 ){
 
                 //iterate through the operation table
                 this.context.dayData.forEach(businessDay => {
-
                     //verify that the day we are accessing matches the day selected
-                    if(day === businessDay.day){
                         
                         // The variables have been overridden
-                        dayExists=true;
-                        this.updateDayExists(true);
                         //verify that a change has been made, either to the opening our closing hour
-                        if(open_time != businessDay.open_time || close_time != businessDay.close_time){
+                        if(parseInt(open_time) != parseInt(businessDay.open_time===""? 0 : businessDay.open_time) || parseInt(close_time) != parseInt(businessDay.close_time)){
 
-                            this.patchBusinessDay(businessDay.id, day, open_time, close_time);
+                            this.patchBusinessDay(businessDay.id, open_time, close_time);
                         }
                         else{
                             //show an error noting that no change was made
                             this.showAlert('Error: No change has been made.');
                         }
-                    }
+                });
                    
-                }); 
             }
-            
-        
-            // 1)  If the list (dayData) is empty, then that means this is a new account so instead of patching, we need to create
-            // 2)  If the selected day does not exist in the operation table, then this will create any unadded selected day
+            //if no info in database exists, add this to the database
+            else{
+                this.addBusinessDay(open_time, close_time);  
+            }
 
-            if(dayExists === false){
-                this.addBusinessDay(day, open_time, close_time);
-            }
         }
+        //if closes before its open or one is closed while the other isn't.
         else{
             this.showAlert('Error: The opening time must come before the closing time.');
             return;
         }
     }
 
-    addBusinessDay = (day, open_time, close_time) => {
+    addBusinessDay = (open_time, close_time) => {
         fetch(`${config.URL}/all`, {
             method: 'POST',
             headers: {
@@ -237,7 +172,7 @@ class HoursPage extends React.Component{
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
             body: JSON.stringify( 
-                { business_id: TokenService.getId(), day, open_time, close_time}
+                { business_id: TokenService.getId(), open_time, close_time}
             )
         })
         .then(res => {
@@ -254,7 +189,7 @@ class HoursPage extends React.Component{
         });
     }
 
-    patchBusinessDay = (id, day, open_time, close_time) => {
+    patchBusinessDay = (id, open_time, close_time) => {
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -263,7 +198,7 @@ class HoursPage extends React.Component{
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
             body: JSON.stringify( 
-                { day, open_time, close_time}
+                { open_time, close_time}
             )
         })
         .then(res => {
@@ -290,9 +225,15 @@ class HoursPage extends React.Component{
         let business = this.context.businessData;
         let operationHours = this.context.dayData;
 
+
+        
         return(
         <div className="page-container crud">
-
+            { console.log('HOURS: ',this.context.dayData)}
+            {   console.log('staeteeeeee: ',this.state, 'OPEN: ',
+                this.context.dayData.length>0? this.context.dayData[0].open_time==="": null,
+                ' CLOSE: ',this.context.dayData.length>0? this.context.dayData[0].close_time: null)
+            }
             <div className='back'>
                 <button className="back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>
             </div>
@@ -303,61 +244,27 @@ class HoursPage extends React.Component{
                     then select the hours of operation</p>
             </header>
 
-           {/* 
-            <Switch>
-                <Route exact path='/hours'
-                  render={(routeProps) =>
-                    <SelectDayWidget
-                        selectedDay={'Sun'}
-                    />
-                } />
-
-            </Switch>
- 
-            Both iterations not working for some reason? For this reaason I'm not 
-            putting the select option in a component even tho it is going to be reused.
-            <SelectDayWidget />
-            
-            <Switch>
-                <Route path='/hours' component={SelectDayWidget} />
-            </Switch>
-
-            {/* List of choices */}
-            <select id='select-day' onChange={(e) => this.handleSelectedDay(e.target.value)}>
-                <option value="None" selected>None</option>
-                {days.map(businessDay => 
-                    <option value={businessDay}>{businessDay}</option>
-                )}
-            </select>
-            
-           {/* FORM */}
-            <form className="labor-form"  onSubmit={e => this.handleSubmit(e)}> 
+            <form className="employee-form"  onSubmit={e => this.handleSubmit(e)}> 
                 
                 <section className="section-form">
+
                     <label htmlFor="hours">Open:</label>
-                    <select id='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
-                        <option value='0'>Closed</option>
+                    <select className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
+                        <option value='-1'>Closed</option>
 
                         {/* If the operation hour list for this company is blank (an empty list) */}
                         {( (operationHours? operationHours.length : null)>0 )
 
                             ?operationHours.map(businessDay =>  
-                                
-                                //if the selected day matches a day stored in the operation table
-                                (this.state.day === businessDay.day)
-                                    //iterate through each hour
-                                    ?hours.map(hour =>
-                                        //if the current hour matches the opening time hour, then show it
-                                        (hour.time === businessDay.open_time)
-                                            ?<option value={hour.time} selected>{hour.time}</option>
-                                            :<option value={hour.time}>{hour.time}</option>
-                                    )
-                                    //if the selected day does NOT match any day stored in the operation table
-                                    :hours.map(hour =>
-                                        <option value={hour.time}>{hour.time}</option>
-                                    )
+                                //iterate through each hour
+                                hoursAM.map(hour =>
+                                    //if the current hour matches the opening time hour, then show it
+                                    (hour.id == parseInt(businessDay.open_time===""? 0 : businessDay.open_time))
+                                        ?<option value={hour.time} selected>{hour.time}</option> 
+                                        :<option value={hour.time}>{hour.time}</option>
+                                )             
                             )
-                            :hours.map(hour =>
+                            :hoursAM.map(hour =>
                                 <option value={hour.time}>{hour.time}</option>
                             )
                         }
@@ -368,45 +275,27 @@ class HoursPage extends React.Component{
                 <section className="section-form">
 
                     <label htmlFor="hours">Close:</label>
-                    <select id='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
-                        <option value='0'>Closed</option>
+                    <select className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
+                        <option value='-1'>Closed</option>
 
 
                         {/* If the operation hour list for this company is blank (an empty list) */}
                         {( (operationHours? operationHours.length : null)>0 )
 
                             ?operationHours.map(businessDay =>  
-                                
-                                //if the selected day matches a day stored in the operation table
-                                (this.state.day === businessDay.day)
-                                    //iterate through each hour
-                                    ?hours.map(hour =>
-                                        //if the current hour matches the closing time hour, then show it
-                                        (hour.time === businessDay.close_time)
-                                            ?<option value={hour.time} selected>{hour.time}</option>
-                                            :<option value={hour.time}>{hour.time}</option>
-                                    )
-                                    //if the selected day does NOT match any day stored in the operation table
-                                    :hours.map(hour =>
-                                        <option value={hour.time}>{hour.time}</option>
-                                    )
+                                //iterate through each hour
+                                hoursPM.map(hour =>
+                                    //if the current hour matches the opening time hour, then show it
+                                    (hour.id == parseInt(businessDay.close_time))
+                                        ?<option value={hour.time} selected>{hour.time}</option>
+                                        :<option value={hour.time}>{hour.time}</option>
+                                )             
                             )
-                            :hours.map(hour =>
+                            :hoursPM.map(hour =>
                                 <option value={hour.time}>{hour.time}</option>
                             )
                         }
-                        {/* {operationHours.map(businessDay =>  
-                             This is for demonstration purposes only. In production I would make
-                                the "None" option the selected choice 
-                                (this.state.day === businessDay.day)
-                                    ?hours.map(hour =>
-                                        (hour.time === businessDay.close_time)
-                                            ?<option value={hour.time} selected>{hour.time}</option>
-                                            :<option value={hour.time}>{hour.time}</option>
-                                    // :<option value={0}>Closed</option>
-                                    )
-                                    :null
-                        )} */}
+                        
                     </select>
 
                 </section>

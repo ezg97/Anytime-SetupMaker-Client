@@ -10,9 +10,6 @@ import {InfoContext } from '../InfoContext';
 import './HomePage.css';
 
 
-
-const { business } = require('../Business');
-
 class HomePage extends React.Component{ 
     /* 
         ---------------------------------
@@ -47,7 +44,7 @@ class HomePage extends React.Component{
                     {/* Scheduling */}
                     <div className='operations-links'>
                         <ul className="navLink">
-                            <li> <NavLink to="/demo">Generate/View Schedule</NavLink> </li>
+                            <li> <NavLink to="/demo">Generate/View Setup</NavLink> </li>
                             <li> <NavLink to="/operations">Operations</NavLink> </li>
                         </ul>
                     </div>

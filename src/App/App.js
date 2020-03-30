@@ -12,10 +12,11 @@ import HomePage from '../HomePage/HomePage';
 import OperationsPage from '../OperationsPage/OperationsPage';
 import EmployeesPage from '../EmployeesPage/EmployeesPage';
 import AddEmployeesPage from '../AddEmployeesPage/AddEmployeesPage';
+import AddPositionsPage from '../AddPositionsPage/AddPositionsPage';
+import PositionsPage from '../PositionsPage/PositionsPage';
 
-import ManagementPage from '../ManagementPage/ManagementPage';
-import LaborPage from '../LaborPage/LaborPage';
 import HoursPage from '../HoursPage/HoursPage';
+import SchedulePage from '../SchedulePage/SchedulePage'
 import UnknownPage from '../UnknownPage/UnknownPage';
 
 
@@ -34,7 +35,7 @@ class App extends Component {
       business: [],
       hours: [],
       employees: [],
-      dayLabor: [],
+      position: [],
       schedule: [],
       fetched: 'not updated',
       requests: [
@@ -47,10 +48,14 @@ class App extends Component {
                     url:`${config.URL}/business/${TokenService.getId()}`,
                     table:'employee',
                 },
+                {   
+                  url:`${config.URL}/business/${TokenService.getId()}`,
+                  table:'position',
+              },
 
                 {   
                     url:`${config.URL}/business/${TokenService.getId()}`,
-                    table:'shr',
+                    table:'schedule',
                 },
       ],
     };
@@ -134,7 +139,7 @@ class App extends Component {
         })
 
       ))
-      .then( ([hours, employees, dayLabor]) => {
+      .then( ([hours, employees, position, schedule]) => {
 
             let business = fetch(`${config.URL}/${TokenService.getId()}`,
             {
@@ -152,14 +157,14 @@ class App extends Component {
             });
 
          
-            return Promise.all([business, hours, employees, dayLabor]);
+            return Promise.all([business, hours, employees, position, schedule]);
       })
-      .then( ([business, hours, employees, dayLabor]) => {  
+      .then( ([business, hours, employees, position, schedule]) => {  
             
 
             //fetch has been completed and the state has been updated so set "fetched" to true
         
-            this.setState({business, hours, employees, 'dayLabor': dayLabor.length>0? this.sort(dayLabor):[], fetched: true});
+            this.setState({business, hours, employees, position, schedule, fetched: true});
 
             
       })
@@ -179,8 +184,15 @@ class App extends Component {
         })
         .then( (employees) => {
           
-          if (!employees.ok)
+          if (!employees.ok){
+
+            //404 not found is the error received when the last item is deleted from the list
+            if(employees.status != 404)
               return employees.json().then(e => Promise.reject(e));
+
+            //it was a 404 error so the last position has been deleted, return an empty list
+            return [];
+          }
           
 
           return employees.json();
@@ -189,6 +201,40 @@ class App extends Component {
           this.setState({employees});
       })
       .catch(error => {
+          console.error({error})
+      });
+
+  }
+
+  updatePositions = () => {
+    fetch(`${config.URL}/business/${TokenService.getId()}`,
+        {
+            headers: {
+                'table':'position',
+                'Authorization':`bearer ${TokenService.getAuthToken()}`
+
+            }
+        })
+        .then( (position) => {
+          if (!position.ok){
+
+            //404 not found is the error received when the last item is deleted from the list
+            if(position.status != 404)
+              return position.json().then(e => Promise.reject(e));
+
+            //it was a 404 error so the last position has been deleted, return an empty list
+            return [];
+          }
+          
+
+          return position.json();
+      })
+      .then( (position) => {
+        console.log('setting the position state: ',position)
+          this.setState({position});
+      })
+      .catch(error => {
+        console.log('err??')
           console.error({error})
       });
 
@@ -219,25 +265,25 @@ class App extends Component {
       }); 
   }
 
-  updateBusinessLabor = () => {
+  updateSchedule = () => {
     fetch(`${config.URL}/business/${TokenService.getId()}`,
         {
             headers: {
-                'table':'shr',
+                'table':'schedule',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
 
             }
         })
-        .then( (dayLabor) => {
+        .then( (schedule) => {
           
-          if (!dayLabor.ok)
-              return dayLabor.json().then(e => Promise.reject(e));
+          if (!schedule.ok)
+              return schedule.json().then(e => Promise.reject(e));
           
 
-          return dayLabor.json();
+          return schedule.json();
       })
-      .then( (dayLabor) => {
-          this.setState({dayLabor});
+      .then( (schedule) => {
+          this.setState({schedule});
       })
       .catch(error => {
           console.error({error})
@@ -319,18 +365,20 @@ class App extends Component {
 
     return (
       <InfoContext.Provider value={{businessData: this.state.business,
-        employeeData: this.state.employees, dayData: this.state.hours, 
-        laborData: this.state.dayLabor, 
+        employeeData: this.state.employees, 
+        dayData: this.state.hours, 
+        positionData: this.state.position,
         scheduleData: this.state.schedule,
         fetched: this.state.fetched,
         /* METHODS */
         checkFetch: this.checkFetch,
         updateEmployees: this.updateEmployees,
-        updateBusinessDay: this.updateBusinessDay,
-        updateBusinessLabor: this.updateBusinessLabor}}>
+        updatePositions: this.updatePositions,
+        updateSchedule: this.updateSchedule,
+        updateBusinessDay: this.updateBusinessDay}}>
 
         <div className="container">
-          {/* NAV BAR */}
+          {/* NAV BAR */console.log('state',this.state)}
           <Switch>
 
               {/* LANDING PAGE */}
@@ -344,8 +392,8 @@ class App extends Component {
 
               {/* SIGNED IN */}
               <Route 
-                exact path={['/','/demo','/home','/operations','/employees', '/addEmployees',
-                '/management','/labor','/hours']}
+                exact path={['/','/demo','/home','/operations','/employees', '/addEmployees','/positions','/addPositions',
+                '/hours','/schedule']}
                 render={(routeProps) =>
                   <NavBar
                     bool={'true'}
@@ -386,16 +434,16 @@ class App extends Component {
                   />}
                 />
 
-              <Route exact path='/management' 
+            <Route exact path='/positions' 
                 render={(routeProps) =>
-                  <ManagementPage
+                  <PositionsPage
                     onClickBack={() =>routeProps.history.goBack()} 
                   />}
-                />
+                />    
 
-              <Route exact path='/labor' 
+              <Route exact path='/addPositions' 
                 render={(routeProps) =>
-                  <LaborPage
+                  <AddPositionsPage
                     onClickBack={() =>routeProps.history.goBack()} 
                   />}
                 />
@@ -403,6 +451,13 @@ class App extends Component {
               <Route exact path='/hours' 
                 render={(routeProps) =>
                   <HoursPage
+                    onClickBack={() =>routeProps.history.goBack()} 
+                  />}
+                />
+
+              <Route exact path='/schedule' 
+                render={(routeProps) =>
+                  <SchedulePage
                     onClickBack={() =>routeProps.history.goBack()} 
                   />}
                 />

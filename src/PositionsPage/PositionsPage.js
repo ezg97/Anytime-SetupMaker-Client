@@ -1,11 +1,20 @@
 import React from 'react';
-import './EmployeesPage.css';
+import { Route, Switch, NavLink } from 'react-router-dom';
+
+//import './PositionsPage.css';
+
+
 import {InfoContext } from '../InfoContext';
+
+
+//const { employees } = require('../Employees');
 import TokenService from '../services/token-service'
 import config from '../config'
 
+import levels from '../Levels';
 
-class EmployeesPage extends React.Component{ 
+
+class PositionsPage extends React.Component{ 
 
 
     /* 
@@ -16,8 +25,9 @@ class EmployeesPage extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          emp: '',
+          position: '',
           skill: 0,
+          importance: 0,
           id: 0,
           messageClass:'message hide',
           alertMessage: '',
@@ -57,28 +67,29 @@ class EmployeesPage extends React.Component{
 
         /* Handle Selected Employee:
             -- update the state to the current employee selected  */
-    handleSelectedEmployee = (val) => {
+    handleSelectedPosition = (val) => {
 
         this.clearAlert();
 
         {/* Save the name selected to STATE */}
         if(val != "None"){
-            this.setState({emp: val});
+            this.setState({position: val});
         }
         else{
-            this.setState({emp: ''});
+            this.setState({position: ''});
         }
 
-        {/* Save the availability from the employee selected to STATE 
+        {/* Save the skill from the employee selected to STATE 
                 note: for some reson !== and != did not work for this.*/}
         if( !(val == '' || val =='None')){
-            this.context.employeeData.forEach( employee => {
-                if(employee){
-                    if(employee.emp_name == val){ 
+            this.context.positionData.forEach( obj => {
+                if(obj){
+                    if(obj.pos_name == val){ 
 
                         this.setState({
-                            skill: employee.emp_skill,
-                            id: employee.id
+                            skill: obj.pos_skill,
+                            importance: obj.pos_importance,
+                            id: obj.id
                         });
                     }
                 }
@@ -87,7 +98,8 @@ class EmployeesPage extends React.Component{
         else{
             this.setState(
                 {
-                    skill: "",
+                    skill: 0,
+                    importance: 0,
                     id: 0
                 }
             );
@@ -96,25 +108,33 @@ class EmployeesPage extends React.Component{
 
         /* 
             Update Name:
-            -- update the state to the current employee name TYPED in the INPUT BOX 
+            -- update the state to the current position name TYPED in the INPUT BOX 
         */
-    updateName = (val) => {
+    updatePositions = (val) => {
         this.clearAlert();
 
         this.setState(
-            {emp: val}
+            {position: val}
         );
     }
 
         /* 
-            Update Availability:
-            -- update the state to the current employee availability SELECTED in the OPTION BOX 
+            Update skill:
+            -- update the state to the current position skill SELECTED in the OPTION BOX 
         */
     updateSkill = (val) => {
         this.clearAlert();
 
         this.setState(
             {skill: val}
+        )
+    }
+
+    updateImportance = (val) => {
+        this.clearAlert();
+
+        this.setState(
+            {importance: val}
         )
     }
 
@@ -125,13 +145,13 @@ class EmployeesPage extends React.Component{
 
         const {id } = this.state;
 
-        //Verify that this employee exists before deleting
-        this.context.employeeData.forEach(employee => {
-            if(employee.id === id){ 
-                this.deleteEmployee(id);
+        //Verify that this position exists before deleting
+        this.context.positionData.forEach(obj => {
+            if(obj.id === id){ 
+                this.deletePosition(id);
                 // this.setState({
-                //     emp:'',
-                //     availability: '',
+                //     position:'',
+                //     skill: '',
                 // });
                 
             }
@@ -142,15 +162,16 @@ class EmployeesPage extends React.Component{
     handleSubmit = (event) => {
         event.preventDefault();
 
-        const {emp, skill, id } = this.state;
+        const {position, skill, importance, id } = this.state;
 
-        //Verify if ANY edits have been made to the employee by comparing what's in the 
+        //Verify if ANY edits have been made to the position by comparing what's in the 
         // database with what we have in state
-        this.context.employeeData.forEach(employee => {
-            if(employee.id === id){
-                if(employee.emp_name != emp || employee.emp_skill != skill){
+        this.context.positionData.forEach(obj => {
+            if(obj.id === id){
+                if(obj.pos_name != position || obj.pos_skill != skill || obj.pos_importance != importance){
+                    console.log('successfully need changing')
                     this.clearAlert();
-                    this.patchEmployee(emp, skill, id);
+                    this.patchPosition(position,skill, importance, id);
                 }
                 else{
                     this.showAlert("Error: No changes have been made.");
@@ -159,53 +180,58 @@ class EmployeesPage extends React.Component{
         })
     }
     
-    deleteEmployee = (id) => {
+    deletePosition = (id) => {
         fetch(`${config.URL}/${id}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json',
-                'table':'employee',
+                'table':'position',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             }
         })
         .then(res => {
+
             if( !res.ok ){
+                console.log('bad response');
+
                 return res.json().then(err => {
                     throw new Error(err.status)
                 })
             }
 
-            this.context.updateEmployees();
+            this.context.updatePositions();
 
-            this.handleSelectedEmployee('None');
+            this.handleSelectedPosition('None');
             this.showAlert('Successfully Deleted','success');
-
         })
         .catch(err => {
+            console.log('got an error delete');
+
             this.showAlert("Error: Please try again later.")
         });
     }
 
-    patchEmployee = (name, emp_skill, id) => {
+    patchPosition = (name, skill, importance, id) => {
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
                 'content-type': 'application/json',
-                'table':'employee',
+                'table':'position',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
             body: JSON.stringify( 
-                { emp_name: name, emp_skill  }
+                { pos_name: name, pos_skill: skill, pos_importance: importance }
             )
         })
         .then(res => {
+            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
                 })
             }
             this.showAlert('Successfully Changed','success');
-            this.context.updateEmployees();
+            this.context.updatePositions();
         })
         .catch(err => {
             this.showAlert('Error: Please try again later.')
@@ -221,10 +247,8 @@ class EmployeesPage extends React.Component{
     */
     render(){
 
-        let employees = this.context.employeeData;
-        let business = this.context.businessData;
         let position = this.context.positionData;
-
+        let business = this.context.businessData;
 
     
         return(
@@ -236,18 +260,18 @@ class EmployeesPage extends React.Component{
             {/* Header */}
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
-                <p>Select an employee from the drop down menu, 
-                    then edit or delete the employee.</p>
+                <p>Select a position from the drop down menu, 
+                    then edit or delete the position.</p>
 
             </header>
             
             {/* Name selection */}
-            <select id='select-employees' onChange={(e) => this.handleSelectedEmployee(e.target.value)}>
+            <select id='select-employees' onChange={(e) => this.handleSelectedPosition(e.target.value)}>
                     <option value="None" selected>None</option>
 
-                    {employees.map(employee => 
+                    {position.map(obj => 
                         /* Have to test the value exists before proceeding*/
-                        <option value={employee? employee.emp_name:null}>{employee? employee.emp_name:null}</option>
+                        <option value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
                     )}
 
             </select>
@@ -263,19 +287,39 @@ class EmployeesPage extends React.Component{
                         className="name-box" 
                         name="name" 
                         id="name" 
-                        value={this.state.emp}
-                        onChange={(e) => this.updateName(e.target.value)}
+                        value={this.state.position}
+                        onChange={(e) => this.updatePositions(e.target.value)}
                     />
                 </section>
 
-                {/* skill SELECTION */}
+                <section className="section-form">
+
+                    <label htmlFor="availability">Importance:</label>
+                    {/* skill SELECTION */}
+                    <select id='availability' onChange={(e) => this.updateImportance(e.target.value)}>
+                     
+                        {position.map(obj => 
+                            /* Have to test the value exists before proceeding*/
+                            (obj.id === this.state.id)
+                                ? levels.map( pos => 
+                                    (pos.id == parseInt(obj.pos_importance))
+                                        ?<option value={obj? obj.pos_importance:null} selected>{obj? obj.pos_importance==1? "Low" :
+                                                                                                     obj.pos_importance==2? "Medium" :
+                                                                                                     obj.pos_importance==3? "High" : null : null}</option>
+                                        :<option value={pos.id}>{pos.level}</option>
+                                 )
+                                :null
+                        )}
+                    </select>
+
+                </section>
+
                 <section className="section-form">
 
                     <label htmlFor="quantity">Skill:</label>
                     <input type="number" className='quantity-box' name="quantity" id="quantity" 
                     value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
-                    min="1" max="100"/>
-
+                    min="1" max="10"/>
 
                 </section>
 
@@ -297,4 +341,4 @@ class EmployeesPage extends React.Component{
 }
 
 
-export default EmployeesPage;
+export default PositionsPage;

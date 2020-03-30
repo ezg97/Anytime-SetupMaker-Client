@@ -3,8 +3,8 @@ import React, { createContext, Component} from 'react';
 export const InfoContext = createContext({
     businessData: null,
     employeeData: null, 
+    positionData: null, 
     dayData: null,//operation hours
-    laborData: null,
     scheduleData: null,
     fetched: null,
     checkFetch: () => {
@@ -13,10 +13,13 @@ export const InfoContext = createContext({
     updateEmployees: () => {
 
     },
+    updatePositions: () => {
+
+    },
     updateBusinessDay: () => {
 
     },
-    updateBusinessLabor: () => {
+    updateSchedule: () => {
 
     },
 
