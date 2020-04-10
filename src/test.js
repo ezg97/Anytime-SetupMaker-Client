@@ -25,15 +25,14 @@ export function setupAlgo(employees, position, operationHours) {
             
             // create temporary deep copy of employee list
             tempEmpList = [...reqEmp];
-
             //filter for only employees working currently at this hour (i)
             // - 1) is the employees time within the hour of operations
             // - 2) if the employees time was never set and is at default (0), then it's time IS the full hour of operations
             // - 3) if the "in time" wasn't set (default at 0 aka begging of hour of operations), but the "out time" was
             // - 4) if the "in time" was set, but the "out time" wasn't (default at 0 aka end of hour of operations)
             tempEmpList = tempEmpList.filter(obj => {
-                if ( (i >= parseInt(obj.in_time) && i <= parseInt(obj.out_time)) || (parseInt(obj.in_time)===0 && parseInt(obj.out_time) === 0) || 
-                     (parseInt(obj.in_time) === 0 && i <= parseInt(obj.out_time)) || i >= (parseInt(obj.in_time) && parseInt(obj.out_time) === 0) )
+                if ( (i >= parseInt(obj.in_time) && i < parseInt(obj.out_time)) || (parseInt(obj.in_time)===0 && parseInt(obj.out_time) === 0) || 
+                     (parseInt(obj.in_time) === 0 && i < parseInt(obj.out_time)) || (i >= parseInt(obj.in_time) && parseInt(obj.out_time) === 0) )
                 {
                     return true;
                 }
