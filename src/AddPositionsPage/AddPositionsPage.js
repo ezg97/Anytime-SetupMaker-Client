@@ -196,7 +196,7 @@ class AddPositionsPage extends React.Component{
             {/* Header */}
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
-                <p>Enter the name, skill preference, and importance of the position.</p>
+                <p>Enter the name, skill preference (1-10), and importance of the position.</p>
        
 
             </header>

@@ -353,7 +353,7 @@ class SchedulePage extends React.Component{
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
                 <p className='schedule-text'>Select the positions required for the setup, select the employees required 
-                    and chose the work hours for the selected employee.</p>
+                    and chose the work hours for the selected employee(s).</p>
             </header>
             
             <ul className="display-list-positions">

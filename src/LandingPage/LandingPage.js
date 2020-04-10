@@ -35,11 +35,11 @@ class LandingPage extends React.Component{
                         <section className='info-landing'>
     
                             <header>
-                                <h3>Instant Scheduling</h3>
+                                <h3>Advanced Setups</h3>
                             </header>
     
-                            <p>Generate schedules for employees and managers to veiw 
-                                for any department, at any time, unlimited times</p>
+                            <p>Take advantage of cutting edge algorithms that will ensure the best 
+                                employees are in the best positions at all times due to a ranking system</p>
                         </section>
     
     
@@ -50,9 +50,9 @@ class LandingPage extends React.Component{
                                 <h3>Full Control</h3>
                             </header>
     
-                            <p>You have full control of the hour of operations of the 
-                                business, how many employees to staff per hour of each 
-                                day, and how far in advance you'd like to generate schedules</p>
+                            <p>You have full control of the positions available, the employees 
+                                working and their shifts, how far in advance you'd like 
+                                to generate setups and more</p>
                         </section>
     
                         {/* SECTION THREE*/}
@@ -62,8 +62,8 @@ class LandingPage extends React.Component{
                                 <h3>Accessibility</h3>
                             </header>
     
-                            <p>You have full, unlimited access to view the generated schedule
-                                from any device</p>
+                            <p>You have full, unlimited access to view the generated setups
+                                from any device, at anytime, unlimited times</p>
                         </section>
                     </div>
 

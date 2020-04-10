@@ -236,8 +236,7 @@ class HoursPage extends React.Component{
             
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
-                <p>Select the day from the drop down menu, 
-                    then select the hours of operation</p>
+                <p>Select the hours of operation</p>
             </header>
 
             <form className="employee-form"  onSubmit={e => this.handleSubmit(e)}> 
