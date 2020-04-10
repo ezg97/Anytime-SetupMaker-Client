@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import './Demo.css';
 
@@ -45,7 +45,7 @@ class Demo extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
 
@@ -56,28 +56,9 @@ class Demo extends React.Component{
 
         this.clearAlert();
 
-        if(val!== "None"){
-            let armyTime=0;
-
-
-            if(val.includes('AM')){
-                armyTime = parseInt( val.split('AM') );
-                //12AM for opening will result to "12", the below is the solution
-                if(armyTime===12){
-                    armyTime=0;
-                }
-            }
-            if(val.includes('PM')){
-                armyTime = 12 + parseInt( val.split('PM') );
-                //12pm will perform "12=12 = 24", the below is the solution
-                if(armyTime === 24){
-                    armyTime = 12;
-                }
-            }
-
-    
+        if (parseInt(val) !== -1) {
             this.setState({
-                time: armyTime
+                time: parseInt(val)
             })
         }
         else{
@@ -91,9 +72,6 @@ class Demo extends React.Component{
  
     render(){
 
-        let positions = this.context.positionData;
-        let employees = this.context.employeeData;
-        let business = this.context.businessData;
         let operationHours = this.context.dayData;
         
         return(
@@ -116,8 +94,7 @@ class Demo extends React.Component{
                             (hour.id >= parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                 //if the hour is the employees "in time"
                                 //also, if the "out time" for the employee is still defaulted to "0" then it needs to be swapped with the actual close time
-                                
-                                ?<option key={id} value={hour.time}>{hour.time}</option>
+                                ?<option key={id} value={hour.id}>{hour.time}</option>
                                 :null
                         )             
                     )}            
@@ -125,7 +102,7 @@ class Demo extends React.Component{
 
            
 
-            {/* 3) THIS COMPONENT WILL DISPLAY THE SCHEDULE*/console.log('TIME: ',this.state.time !== -1)}
+            {/* 3) THIS COMPONENT WILL DISPLAY THE SCHEDULE*/}
             {(this.state.time !== -1)
                 ?<Switch>
                     <Route exact path='/Demo'

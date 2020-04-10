@@ -1,18 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-//import './PositionsPage.css';
-
-
 import {InfoContext } from '../InfoContext';
 
-
-//const { employees } = require('../Employees');
 import TokenService from '../services/token-service'
 import config from '../config'
 
 import levels from '../Levels';
-
 
 class PositionsPage extends React.Component{ 
 
@@ -77,7 +71,7 @@ class PositionsPage extends React.Component{
 
         /* Save the name selected to STATE */
         
-        if (val !== "None") {
+        if (val !== "") {
             this.setState({position: val});
         }
         else {
@@ -86,7 +80,7 @@ class PositionsPage extends React.Component{
 
         /* Save the skill from the employee selected to STATE 
                 note: for some reson !=== and !== did not work for this.*/
-        if( !(val === '' || val === 'None')){
+        if( !(val === '' )){
             this.context.positionData.forEach( obj => {
                 if(obj){
                     if(obj.pos_name === val){ 
@@ -174,7 +168,6 @@ class PositionsPage extends React.Component{
         this.context.positionData.forEach(obj => {
             if(obj.id === id){
                 if(obj.pos_name !== position || obj.pos_skill !== skill || obj.pos_importance !== importance){
-                    console.log('successfully need changing')
                     this.clearAlert();
                     this.patchPosition(position,skill, importance, id);
                 }
@@ -197,16 +190,14 @@ class PositionsPage extends React.Component{
         .then(res => {
 
             if( !res.ok ){
-                console.log('bad response');
-
                 return res.json().then(err => {
                     throw new Error(err.status)
                 })
             }
-
+            
+            
             this.context.updatePositions();
-
-            this.handleSelectedPosition('None');
+            this.handleSelectedPosition('');
             this.showAlert('Successfully Deleted','success');
         })
         .catch(err => {
@@ -228,7 +219,6 @@ class PositionsPage extends React.Component{
             )
         })
         .then(res => {
-            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -272,11 +262,11 @@ class PositionsPage extends React.Component{
             
             {/* Name selection */}
             <select id='select-employees' onChange={(e) => this.handleSelectedPosition(e.target.value)}>
-                    <option value="None" selected>None</option>
+                    <option value="">None</option>
 
-                    {position.map(obj => 
+                    {position.map( (obj, id) => 
                         /* Have to test the value exists before proceeding*/
-                        <option value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
+                        <option key={id} value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
                     )}
 
             </select>
@@ -301,19 +291,19 @@ class PositionsPage extends React.Component{
 
                 <section className="section-form">
                     <div className="section-form-inner">
-                        <label htmlFor="availability">Importance:</label>
+                        <label htmlFor="importance">Importance:</label>
                         {/* skill SELECTION */}
-                        <select id='availability' onChange={(e) => this.updateImportance(e.target.value)}>
+                        <select value={this.state.importance} id='importance' onChange={(e) => this.updateImportance(e.target.value)}>
                         
-                            {position.map(obj => 
+                            {position.map( obj => 
                                 /* Have to test the value exists before proceeding*/
                                 (obj.id === this.state.id)
-                                    ? levels.map( pos => 
+                                    ? levels.map( (pos, id) => 
                                         (pos.id === parseInt(obj.pos_importance))
-                                            ?<option value={obj? obj.pos_importance:null} selected>{obj? obj.pos_importance===1? "Low" :
+                                            ?<option key={id} value={obj? obj.pos_importance:null}>{obj? obj.pos_importance===1? "Low" :
                                                                                                         obj.pos_importance===2? "Medium" :
                                                                                                         obj.pos_importance===3? "High" : null : null}</option>
-                                            :<option value={pos.id}>{pos.level}</option>
+                                            :<option key={id} value={pos.id}>{pos.level}</option>
                                     )
                                     :null
                             )}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
 
 import {InfoContext } from '../InfoContext';
 import config from '../config'
@@ -59,18 +58,14 @@ class AddPositionsPage extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
     }
 
-        /* 
-            Update Name:
-            -- update the state to the current employee name TYPED in the INPUT BOX 
-        */
+    
     updatePosition = (val) => {
         let matched = false;
-        console.log('update text: ',val);
         this.context.positionData.forEach(position => {
             if(position.pos_name.toLowerCase() === val.toLowerCase()){
                 this.updatePositionExists(true);
@@ -90,14 +85,19 @@ class AddPositionsPage extends React.Component{
         );
     }
 
-        /* 
-            Update Availability:
-            -- update the state to the current employee availability SELECTED in the OPTION BOX 
-        */
+       
     updateSkill = (val) => {
-        this.setState(
-            {skill: parseInt(val)}
-        )
+        if (val !== '') {
+            this.setState(
+                {skill: parseInt(val)}
+            )
+        }
+        else {
+            this.setState(
+                {skill: ''}
+            )
+        }
+        
     }
 
     updateImportance = (val) => {
@@ -125,10 +125,13 @@ class AddPositionsPage extends React.Component{
 
         const {position, skill, importance } = this.state;
 
-        console.log('wanna submit this: ',this.state)
-
         if(this.state.positionExists === false){
-            this.postPosition(position,skill, importance);
+            if(skill !== '' && position !== '') {
+                this.postPosition(position,skill, importance);
+            }
+            else {
+                this.showAlert('Error: All fields are required.');
+            }
         }
         // This would be redundant, except it's needed for after the user submits a new user succesfully
         // if they make no changes to the user and click submit twice, then the "success" message will
@@ -139,7 +142,6 @@ class AddPositionsPage extends React.Component{
     }
 
     postPosition = (name, pos_skill, pos_importance) => {
-        console.log('skill:',typeof(skill),'importance: ',typeof('importance'))
         fetch(`${config.URL}/all`, {  
             method: 'POST',
             headers: {
@@ -152,7 +154,6 @@ class AddPositionsPage extends React.Component{
             )
         })
         .then(res => {
-            console.log('res', res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -169,8 +170,7 @@ class AddPositionsPage extends React.Component{
         })
         .catch(err => {
             this.showAlert("Error: Please try again later.");
-            console.log('logging out why?',err);
-           // this.logout();
+            this.logout();
         });
     }
 
@@ -183,7 +183,6 @@ class AddPositionsPage extends React.Component{
     */
     render(){
 
-        let positions = this.context.positionData;
         let business = this.context.businessData;
 
     
@@ -194,7 +193,7 @@ class AddPositionsPage extends React.Component{
                 <button className="back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>
             </div>
                       
-            {/* Header */console.log('state: ',this.state)}
+            {/* Header */}
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
                 <p>Enter the name, skill preference, and importance of the position.</p>
@@ -225,9 +224,9 @@ class AddPositionsPage extends React.Component{
                     <div className="section-form-inner">
                         <label htmlFor="importance">Importance:</label>
                         {/* Availability SELECTION */}
-                        <select id='importance' onChange={(e) => this.updateImportance(e.target.value)}>
+                        <select value={this.state.importance} id='importance' onChange={(e) => this.updateImportance(e.target.value)}>
                             
-                            <option value={1} selected>Low</option>
+                            <option value={1} >Low</option>
                             <option value={2}>Medium</option>    
                             <option value={3}>High</option>              
                         </select>

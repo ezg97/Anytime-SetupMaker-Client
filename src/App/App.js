@@ -145,16 +145,11 @@ class App extends Component {
           }
         )
         .then(data => {
-            if (!data.ok){
-              if(data.status === 401) {
-                return data.json().then(e => Promise.reject(e));
-              }
-              else{
-                throw new Error(data.status)
-              }
-            }
+          if (!data.ok){
+            throw new Error(data.status)
+          }
 
-            return data.json();
+          return data.json();
         })
 
       ))
@@ -168,7 +163,6 @@ class App extends Component {
                 }
             })
             .then(data => {
-              console.log('response 1', data);
               if (!data.ok){
                 return data.json().then(e => Promise.reject(e));
               }
@@ -180,13 +174,9 @@ class App extends Component {
             return Promise.all([business, hours, employees, position]);
       })
       .then( ([business, hours, employees, position]) => {  
-            
-
             //fetch has been completed and the state has been updated so set "fetched" to true
         
             this.setState({business, hours, employees, position, fetched: true});
-
-            
       })
       .catch(error => {
           this.logout();
@@ -310,7 +300,7 @@ class App extends Component {
           updateBusinessDay: this.updateBusinessDay}}>
 
           <div className="container">
-            {/* NAV BAR */console.log('state',this.state)}
+            {/* NAV BAR */}
             <Switch>
                 {/* SIGNED IN */}
                 <Route 

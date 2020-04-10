@@ -28,6 +28,7 @@ class SchedulePage extends React.Component{
         this.state = {
           in_time: 0,
           out_time: [],
+          employees: [],
           position: '',
           skill: 0,
           importance: 0,
@@ -75,18 +76,14 @@ class SchedulePage extends React.Component{
 
 
     positionButtonClicked = (pos_id, list_index, e) => {
-        console.log('id: ',pos_id,list_index);
         e.stopPropagation();
         let className = e.target.className
-        console.log('class name',e.target.className)
         if(className.includes('clicked') ){
-            console.log('UNCHECKING' );
             e.currentTarget.className = `pos-requirement-button ${list_index}`;
 
             this.patchPosition(pos_id, false);
         }
         else{
-            console.log('CHECKING');
             e.currentTarget.className += ` clicked`;
 
             this.patchPosition(pos_id, true);
@@ -96,24 +93,18 @@ class SchedulePage extends React.Component{
 
     
     employeeButtonClicked = (emp_id, list_index, e) => {
-        console.log('id: ',emp_id,list_index);
 
         e.stopPropagation();
 
         let className = e.target.className
-        console.log('class name',e.target.className);
 
         if(className.includes('clicked') ){
-            console.log('UNCHECKING' );
 
             e.currentTarget.className = `emp-requirement-button ${list_index}`;
-
-            console.log('calling patch')
 
             this.patchEmployee(emp_id, false);
         }
         else{
-            console.log('CHECKING');
 
             e.currentTarget.className += ` clicked`;
 
@@ -122,51 +113,28 @@ class SchedulePage extends React.Component{
 
     }
 
-    updateInTime = (val,id,out) => {
+    updateInTime = (val,id, eID) => {
 
         this.clearAlert();
 
-        let inTime=0;
-
-        if(val.includes('AM')){
-            inTime = parseInt( val.split('AM') );
-            //12AM for opening will result to "12", the below is the solution
-            if(inTime===12){
-                inTime=0;
+        let emps = this.state.employees.map( (obj,index) => {
+            if(index === id) {
+                obj[0] = parseInt(val);
             }
-        }
-        if(val.includes('PM')){
-            inTime = 12 + parseInt( val.split('PM') );
-            //12pm will perform "12=12 = 24", the below is the solution
-            if(inTime === 24){
-                inTime = 12;
-            }
-        }
-
-        console.log('open time val: ',val);
-        console.log('open time army: ',inTime);
-        console.log('employee id',id);
-        console.log('employee out',out);
-
-        if(out===0){
-            out=this.context.dayData[0].close_time;
-        }
-
-        console.log('employee NEW out',out);
-
-        this.setState({
-            in_time: inTime
+            return obj;
         });
 
-        //verify it's legal
+        this.setState({
+            employees: emps
+        });
 
         //if closes before it opens AND open AND close are not closed. 
-        if( out > inTime ){
+        if( parseInt(val) < emps[id][1] ){
 
             this.clearAlert();
                         
             //update open
-            this.patchEmployeeInTime(id, inTime);
+            this.patchEmployeeInTime(eID, parseInt(val));
         }
         //if closes before its open or one is closed while the other isn't.
         else{
@@ -177,47 +145,29 @@ class SchedulePage extends React.Component{
         
     }
 
-    updateOutTime = (val,id,inTime) => {
+    updateOutTime = (val,id,eID) => {
 
         this.clearAlert();
 
-        let outTime=0;
-
-        if(val.includes('AM')){
-            outTime = parseInt( val.split('AM') );
-            //12AM for opening will result to "12", the below is the solution
-            if(outTime===12){
-                outTime=0;
+        let emps = this.state.employees.map( (obj,index) => {
+            if(index === id) {
+                obj[1] = parseInt(val);
             }
-        }
-        if(val.includes('PM')){
-            outTime = 12 + parseInt( val.split('PM') );
-            //12pm will perform "12=12 = 24", the below is the solution
-            if(outTime === 24){
-                outTime = 12;
-            }
-        }
+            return obj;
+        });
 
-        console.log('open time val: ',val);
-        console.log('open time outarmy: ',outTime);
-        console.log('employee id',id);
-        console.log('employee inTime',inTime);
+        this.setState({
+            employees: emps
+        });
 
-        if(inTime===0){
-            inTime=this.context.dayData[0].open_time;
-        }
-
-        console.log('employee NEW in',inTime);
-
-        //verify it's legal
 
         //if opens before it closes 
-        if( inTime < outTime ){
+        if( this.state.employees[id][0] < parseInt(val) ){
 
             this.clearAlert();
                         
             //update open
-            this.patchEmployeeOutTime(id, outTime);
+            this.patchEmployeeOutTime(eID, parseInt(val));
         }
         else{
             //show error if illegal
@@ -228,7 +178,6 @@ class SchedulePage extends React.Component{
     }
 
     patchEmployeeOutTime = (id, out_time) => {
-        console.log('xxxxxxxxxxxxxxxxxxout_time: ',out_time)
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -241,7 +190,6 @@ class SchedulePage extends React.Component{
             )
         })
         .then(res => {
-            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -258,7 +206,6 @@ class SchedulePage extends React.Component{
 
 
     patchEmployeeInTime = (id, in_time) => {
-        console.log('xxxxxxxxxxxxxxxxxxin_time: ',in_time)
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -271,7 +218,6 @@ class SchedulePage extends React.Component{
             )
         })
         .then(res => {
-            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -287,7 +233,6 @@ class SchedulePage extends React.Component{
     }
 
     patchEmployee = (id, emp_required) => {
-        console.log('emp_required: ',emp_required)
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -300,7 +245,6 @@ class SchedulePage extends React.Component{
             )
         })
         .then(res => {
-            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -317,7 +261,6 @@ class SchedulePage extends React.Component{
 
    
     patchPosition = (id, pos_required) => {
-        console.log('pos_required: ',pos_required)
         fetch(`${config.URL}/${id}`, {
             method: 'PATCH',
             headers: {
@@ -330,7 +273,6 @@ class SchedulePage extends React.Component{
             )
         })
         .then(res => {
-            console.log('got something back, response: ',res)
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
@@ -343,6 +285,48 @@ class SchedulePage extends React.Component{
             this.showAlert('Error: Please try again later.');
             this.logout();
         });
+    }
+
+     /* 
+        ---------------------------------
+        |       COMPONENT DID MOUNT     |
+    -----                               -----------------------------------------------------------------------------------------
+    |    I need to know when this the fetch call in App.js has been completed                                                   |
+    |    and the values have been stored in context:                                                                            |
+    |    1) The state must handle the select/option time, however, I also need to set the default time to match the time        |
+    |       database.                                                                                                           |
+    |----------------------------------------------------------------------------------------------------------------------------
+
+    */
+
+   async componentDidMount(){
+        //must use try/catch for async calls
+        try{
+            //await the response (aka resolve) from checkFetch
+            await this.context.checkFetch();
+
+            let emps = [];
+
+            if(this.context.employeeData.length > 0) {
+
+                emps = this.context.employeeData.map(emp => {
+                    if (parseInt(emp.out_time) === 0) {
+                        return [emp.in_time, parseInt(this.context.dayData[0].close_time)]
+                    }
+                    else{
+                        return [emp.in_time, emp.out_time]
+                    }
+                });
+            }
+
+            this.setState({
+                employees: emps
+            });
+            
+        } catch (err){
+            // error occurred
+        }
+
     }
 
     /* 
@@ -374,7 +358,7 @@ class SchedulePage extends React.Component{
             
             <ul className="display-list-positions">
 
-                { (positions.length>0)
+                { (employees.length > 0 && operationHours.length > 0 && positions.length > 0)
                     
                     ? positions.map( (position,index) => 
                         <li key={index} className='list-element'>
@@ -387,7 +371,7 @@ class SchedulePage extends React.Component{
                         </li>
                       )
 
-                    : <p>No positions found</p>
+                    : null
                 }
 
             </ul>
@@ -400,13 +384,15 @@ class SchedulePage extends React.Component{
                     
                 <ul className="display-list-employees">
 
-                    <li className='text-style'>
-                        <h3 className='shift-text'>Shift Time:</h3>
-                        <h3 className='shift-text'>Name:</h3>
-                    </li>
+                    { (employees.length > 0 && operationHours.length > 0 && positions.length > 0)
+                        ?<li className='text-style'>
+                            <h3 className='shift-text'>Shift Time:</h3>
+                            <h3 className='shift-text'>Name:</h3>
+                        </li>
+                        :null
+                    }
                     
-
-                    { (employees.length>0)
+                    { (employees.length > 0 && operationHours.length > 0 && positions.length > 0)
                         
                         ? employees.map( (employee,index) => 
                             <li key={index} className='list-element'>
@@ -417,20 +403,16 @@ class SchedulePage extends React.Component{
                                     : <button className={`emp-requirement-button ${index}`} onClick={(e) => this.employeeButtonClicked(employee.id,index, e)}></button>
                                 }
 
-                                {/* IN TIME */}
-                                <select className='scheduler-hours' value={this.state.in_time} onChange={(e) => this.updateInTime(e.target.value,employee.id,employee.out_time)}>
+                                {/* IN TIME */ }
+                                <select value={this.state.employees.length > 0? this.state.employees[index][0] : operationHours.open_time} 
+                                className='scheduler-hours' onChange={(e) => this.updateInTime(e.target.value,index,employee.id)}>
                                     {/* If the operation hour list for this company is blank (an empty list) */}
-                                    {
-
-                                    operationHours.map(businessDay =>  
+                                    {operationHours.map(businessDay =>  
                                             //iterate through each hour
                                             hoursAM.map( (hour, id) =>
                                                 //if hour fits in the hour of operations (can't open the hour the business closes)
                                                 (hour.id >= parseInt(businessDay.open_time) && hour.id < parseInt(businessDay.close_time) )
-                                                    //if the hour is the employees "in time"
-                                                    ?(hour.id === parseInt(employee.in_time))
-                                                        ?<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
-                                                        :<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
+                                                    ?<option key={id} className='option-time' value={hour.id}>{hour.time}</option>
                                                     :null
                                             )             
                                         )
@@ -440,20 +422,18 @@ class SchedulePage extends React.Component{
                                 </select>
 
                                 {/* OUT TIME */}
-                                <select className='scheduler-hours'  onChange={(e) => this.updateOutTime(e.target.value,employee.id,employee.in_time)}>
+                                <select value={this.state.employees.length > 0? this.state.employees[index][1] : operationHours.close_time} 
+                                className='scheduler-hours'  onChange={(e) => this.updateOutTime(e.target.value,index, employee.id)}>
                                     {/* If the operation hour list for this company is blank (an empty list) */}
-                                    {
-
-                                    operationHours.map(businessDay =>  
+                                    {operationHours.map(businessDay =>  
                                             //iterate through each hour
                                             hoursPM.map( (hour, id) =>
                                                 //if hour fits in the hour of operations (can't close the hour the business opens)
                                                 (hour.id > parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                                     //if the hour is the employees "in time"
                                                     //also, if the "out time" for the employee is still defaulted to "0" then it needs to be swapped with the actual close time
-                                                    ?(hour.id === ( parseInt(employee.out_time)===0? this.context.dayData[0].close_time : employee.out_time ) )
-                                                        ?<option key={id} className='option-time' value={hour.time} selected>{hour.time}</option>
-                                                        :<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
+                                                   // ?(hour.id === ( parseInt(employee.out_time)===0? this.context.dayData[0].close_time : employee.out_time ) )
+                                                    ?<option key={id} className='option-time' value={hour.id}>{hour.time}</option>
                                                     :null
                                             )             
                                         )
@@ -468,7 +448,7 @@ class SchedulePage extends React.Component{
                             </li>
                         )
 
-                        : <p>No employees found</p>
+                        : <p>Employees, Positions, and Operation Hours are all required before a setup can be made</p>
                     }
 
                 </ul>

@@ -1,8 +1,6 @@
 
 export function setupAlgo(employees, position, operationHours) {
 
-    console.log('start setupAlgo - - -');
-
     //initiate as an empty list
     let reqPos = [];
     let reqEmp = [];

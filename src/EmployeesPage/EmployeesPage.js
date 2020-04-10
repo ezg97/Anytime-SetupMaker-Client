@@ -70,7 +70,7 @@ class EmployeesPage extends React.Component{
         this.clearAlert();
 
         /* Save the name selected to STATE */
-        if(val !== "None"){
+        if(val !== ""){
             this.setState({emp: val});
         }
         else{
@@ -79,7 +79,7 @@ class EmployeesPage extends React.Component{
 
         /* Save the availability from the employee selected to STATE 
                 note: for some reson !=== and !== did not work for this.*/
-        if( !(val === '' || val ==='None')){
+        if( !(val === '')){
             this.context.employeeData.forEach( employee => {
                 if(employee){
                     if(employee.emp_name === val){ 
@@ -250,11 +250,11 @@ class EmployeesPage extends React.Component{
             
             {/* Name selection */}
             <select id='select-employees' onChange={(e) => this.handleSelectedEmployee(e.target.value)}>
-                    <option value="None" selected>None</option>
+                    <option value="">None</option>
 
-                    {employees.map(employee => 
+                    {employees.map( (employee, id) => 
                         /* Have to test the value exists before proceeding*/
-                        <option value={employee? employee.emp_name:null}>{employee? employee.emp_name:null}</option>
+                        <option key={id} value={employee? employee.emp_name:null}>{employee? employee.emp_name:null}</option>
                     )}
 
             </select>

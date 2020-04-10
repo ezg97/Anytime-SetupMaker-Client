@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import { Container, Row, Col } from 'react-grid-system';
 
@@ -51,30 +50,20 @@ class ViewSchedule extends React.Component{
 
     */
     async componentDidMount(){
-        console.log('- - - mounted');
         //must use try/catch for async calls
         try{
-            //console.log(' --- START AWAIT')
             //await the response (aka resolve) from checkFetch
-            let fetched = await this.context.checkFetch();
-            console.log('- - - fetched');
-            console.log('fetch: ',fetched)
-
-            //console.log('ITEMS HAVE BEEN FETCHED: ',fetched,this.context.employeeData)
+            await this.context.checkFetch();
 
             //Finally can pass the context to the function
             let newSetup = logic.setupAlgo(this.context.employeeData, this.context.positionData, this.context.dayData);
-            console.log('- - - received');
-
-
-            console.log('SETUP: ', newSetup)
 
             this.setState({
                 setup: newSetup
             });
 
         } catch (err){
-            // console.log('ERROR in PROMISE: ',err)
+            // Error Occurred
         }
 
         
@@ -84,7 +73,6 @@ class ViewSchedule extends React.Component{
     render(){
 
         let selectedHour = this.props.selectedHour;
-        let business = this.context.businessData;  
         let operationHours = this.context.dayData;      
        
 
@@ -104,9 +92,9 @@ class ViewSchedule extends React.Component{
 
                 {this.state.setup.map((hour,id) => 
                     (id + parseInt(operationHours[0].open_time) === parseInt(selectedHour))
-                        ?hour.map(obj =>
-                            <Row className='row' key={id}>
-                                <Col>{obj.pos}</Col>
+                        ?hour.map( (obj,index) =>
+                            <Row className='row' key={index}>
+                                <Col> {obj.pos}</Col>
                                 <Col>{obj.emp}</Col>
                             </Row>  
                             

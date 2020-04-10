@@ -58,10 +58,18 @@ class LoginPage extends React.Component {
             password: password,
         })
         .then( res => {
-            this.clearError();
-            const { history } = this.props;
-            history.push('/');
-            this.context.fetchDatabase()
+           
+            if(res){
+                this.clearError();
+                const { history } = this.props;
+                history.push('/');
+                this.context.fetchDatabase();
+            }
+            else {
+                return res.json().then(err => {
+                    throw new Error(err);
+                })
+            }
         })
         .catch(err => {
             this.showError('Incorrect Business Name or Password');

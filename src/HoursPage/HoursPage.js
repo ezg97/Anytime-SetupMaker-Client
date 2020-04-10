@@ -67,28 +67,8 @@ class HoursPage extends React.Component{
     updateOpenTime = (val) => {
         this.clearAlert();
 
-        let armyTime=-1;
-
-        if(val.includes('AM')){
-            armyTime = parseInt( val.split('AM') );
-            //12AM for opening will result to "12", the below is the solution
-            if(armyTime===12){
-                armyTime=0;
-            }
-        }
-        if(val.includes('PM')){
-            armyTime = 12 + parseInt( val.split('PM') );
-            //12pm will perform "12=12 = 24", the below is the solution
-            if(armyTime === 24){
-                armyTime = 12;
-            }
-        }
-
-        console.log('open time val: ',val);
-        console.log('open time army: ',armyTime);
-
-        if(armyTime !== -1){
-            this.setState({open_time: armyTime});
+        if(parseInt(val) !== -1){
+            this.setState({open_time: parseInt(val)});
         }
         else{
             this.setState({open_time: -1});
@@ -98,28 +78,8 @@ class HoursPage extends React.Component{
     updateCloseTime = (val) => {
         this.clearAlert();
 
-        let armyTime=-1;
-
-        if(val.includes('AM')){
-            armyTime = parseInt( val.split('AM') );
-            //12AM for closing will result to "12", the below is the solution
-            if(armyTime===12){
-                armyTime=24;
-            }
-        }
-        if(val.includes('PM')){
-            armyTime = 12 + parseInt( val.split('PM') );
-            //12pm will perform "12=12 = 24", the below is the solution
-            if(armyTime === 24){
-                armyTime = 12;
-            }
-        }
-
-        console.log('close time army: ',armyTime)
-        console.log('close time val: ',val);
-
-        if(armyTime !== -1){
-            this.setState({close_time: armyTime});
+        if(parseInt(val) !== -1){
+            this.setState({close_time: parseInt(val)});
         }
         else{
             this.setState({close_time: -1});
@@ -225,6 +185,38 @@ class HoursPage extends React.Component{
 
      /* 
         ---------------------------------
+        |       COMPONENT DID MOUNT     |
+    -----                               -----------------------------------------------------------------------------------------
+    |    I need to know when this the fetch call in App.js has been completed                                                   |
+    |    and the values have been stored in context:                                                                            |
+    |    1) The state must handle the select/option time, however, I also need to set the default time to match the time        |
+    |       database.                                                                                                           |
+    |----------------------------------------------------------------------------------------------------------------------------
+
+    */
+
+    async componentDidMount(){
+        //must use try/catch for async calls
+        try{
+            //await the response (aka resolve) from checkFetch
+            await this.context.checkFetch();
+
+            if(this.context.dayData.length > 0) {
+                this.setState({
+                    open_time: parseInt(this.context.dayData[0].open_time),
+                    close_time: parseInt(this.context.dayData[0].close_time)
+                });
+            }
+            
+
+        } catch (err){
+            // error occurred
+        }
+
+    }
+
+     /* 
+        ---------------------------------
         |            RENDER             |
         ---------------------------------
     */
@@ -237,11 +229,7 @@ class HoursPage extends React.Component{
         
         return(
         <div className="page-container crud">
-            { console.log('HOURS: ',this.context.dayData)}
-            {   console.log('staeteeeeee: ',this.state, 'OPEN: ',
-                this.context.dayData.length>0? this.context.dayData[0].open_time==="": null,
-                ' CLOSE: ',this.context.dayData.length>0? this.context.dayData[0].close_time: null)
-            }
+
             <div className='back'>
                 <button className="back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>
             </div>
@@ -257,23 +245,11 @@ class HoursPage extends React.Component{
                 <section className="section-form">
                     <div className="section-form-inner">
                         <label htmlFor="hours">Open:</label>
-                        <select className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
+                        <select value={(operationHours.length > 0? this.state.open_time === -1? operationHours[0].open_time : this.state.open_time : this.state.open_time)}  className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
                             <option value='-1'>Closed</option>
 
-                            {/* If the operation hour list for this company is blank (an empty list) */}
-                            {( (operationHours? operationHours.length : null)>0 )
-
-                                ?operationHours.map(businessDay =>  
-                                    //iterate through each hour
-                                    hoursAM.map(hour =>
-                                        //if the current hour matches the opening time hour, then show it
-                                        (hour.id === parseInt(businessDay.open_time===""? 0 : businessDay.open_time))
-                                            ?<option value={hour.time} selected>{hour.time}</option> 
-                                            :<option value={hour.time}>{hour.time}</option>
-                                    )             
-                                )
-                                :hoursAM.map(hour =>
-                                    <option value={hour.time}>{hour.time}</option>
+                            {hoursAM.map( (hour,id) =>
+                                    <option key={id} value={hour.id}>{hour.time}</option>
                                 )
                             }
                         </select>
@@ -284,24 +260,11 @@ class HoursPage extends React.Component{
                 <section className="section-form">
                     <div className="section-form-inner">
                         <label htmlFor="hours">Close:</label>
-                        <select className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
+                        <select value={(operationHours.length > 0? this.state.close_time === -1? operationHours[0].close_time : this.state.close_time : this.state.close_time)} className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
                             <option value='-1'>Closed</option>
 
-
-                            {/* If the operation hour list for this company is blank (an empty list) */}
-                            {( (operationHours? operationHours.length : null)>0 )
-
-                                ?operationHours.map(businessDay =>  
-                                    //iterate through each hour
-                                    hoursPM.map(hour =>
-                                        //if the current hour matches the opening time hour, then show it
-                                        (hour.id === parseInt(businessDay.close_time))
-                                            ?<option value={hour.time} selected>{hour.time}</option>
-                                            :<option value={hour.time}>{hour.time}</option>
-                                    )             
-                                )
-                                :hoursPM.map(hour =>
-                                    <option value={hour.time}>{hour.time}</option>
+                            {hoursPM.map( (hour,id) =>
+                                    <option key={id} value={hour.id}>{hour.time}</option>
                                 )
                             }
                             

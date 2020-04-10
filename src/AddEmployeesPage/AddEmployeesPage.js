@@ -149,7 +149,6 @@ class AddEmployeesPage extends React.Component{
         })
         .then(res => {
             if( !res.ok ){
-                console.error(res);
                 return res.json().then(err => {
                     throw new Error(err.status)
                 })
@@ -186,7 +185,7 @@ class AddEmployeesPage extends React.Component{
                 <button className="back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>
             </div>
                       
-            {/* Header */ console.log('AP state: ',this.state)}
+            {/* Header */}
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
                 <p>Enter the full name and the overall sill (1-100) of a new employee.</p>

@@ -1,68 +1,61 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Anytime SetupMaker Client
 
-## Available Scripts
+Live Site: [Anytime SetupMaker](https://anytime-scheduler-client.now.sh/)
 
-In the project directory, you can run:
+## Description
+Create an account or login if you're an existing user, then add, edit, or delete users from your company, edit the hours of operation, and the labor (amount of employees working per hour). The info you provide will allow the application to generate a weekly schedule that adheres to your specifications. 
 
-### `npm start`
+## Technologies Used
+Created and bootstrapped with create-react-app. This app uses HTML/CSS/React JavaScript to present a complete client side application.
+The backend/database uses Node/Exress/PostrgreSQL that is tested by mocha/chai, which you can find here: https://github.com/ezg97/Anytime-Scheduler-Server
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Page Layout:
 
-### `npm test`
+### 1. **This is the landing page, provides a description of the app and an option to login or signup**
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Landing Page Image](image-descriptions/Scheduler-Landing-page.png)
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. **Login Page for returning users, also showing the demo accounts user login info**
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+![Login Page Image](image-descriptions/Scheduler-login-page.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### 3. **Signup account for new users to create an account**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![Signup Page Image](image-descriptions/Scheduler-signup-page.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 4. **This is the home page, once logged in, you can chose which option to navigate to, or logout**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![Home Page Image](image-descriptions/Scheduler-home-page.png)
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 5. **This is the demo page, you can select the day of the week you desire and veiw the schedule for that day, return home, or logout**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Demo Page Image](image-descriptions/Scheduler-demo-page.png)
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+### 6. **This is the operations page, you can select page you want to navigate to, each page listed here can modify the schedule that you generate**
 
-### Analyzing the Bundle Size
+![Operations Page Image](image-descriptions/Scheduler-operations-page.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
+### 7. **This is the Add Employees page, you can add employees, go back (on mobile and tablet devices a back button is displayed), return home, or logout**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+![AddEmployees Page Image](image-descriptions/Scheduler-addEmployees-page.png)
 
-### Advanced Configuration
+### 8. **This is the Edit Employees page, you can edit employees, go back (on mobile and tablet devices a back button is displayed), return home, or logout**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+![editEmployees Page Image](image-descriptions/Scheduler-editEmployees-page.png)
 
-### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### 9. **This is the hours page, you can select the day you want to edit, then set the hours of operation for that day. Also, you can go back (on mobile and tablet devices a back button is displayed), return home, or logout**
 
-### `npm run build` fails to minify
+![Hours Page Image](image-descriptions/Scheduler-hours-page.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### 10. **This is the labor page, you can select the day and time that you want to edit, then set the labor for that hour/day. Also, you can go back (on mobile and tablet devices a back button is displayed), return home, or logout**
+
+![Labor Page Image](image-descriptions/Scheduler-labor-page.png)
