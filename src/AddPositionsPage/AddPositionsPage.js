@@ -1,12 +1,10 @@
 import React from 'react';
 import { Route, Switch, NavLink } from 'react-router-dom';
 
-//import './AddPositionsPage.css';
-
 import {InfoContext } from '../InfoContext';
 import config from '../config'
 
-//const { employees } = require('../Employees');
+import { withRouter } from 'react-router-dom';
 import TokenService from '../services/token-service'
 
 
@@ -46,6 +44,12 @@ class AddPositionsPage extends React.Component{
         |            METHODS            |
         ---------------------------------
     */
+   logout = () => {
+
+    this.context.logout();
+    const { history } = this.props;
+    history.push('/');
+}
 
    clearAlert = () => {
         this.setState({
@@ -164,8 +168,9 @@ class AddPositionsPage extends React.Component{
             this.context.updatePositions();
         })
         .catch(err => {
-            console.log('err',err)
-            this.showAlert("Error: Please try again later.")
+            this.showAlert("Error: Please try again later.");
+            console.log('logging out why?',err);
+           // this.logout();
         });
     }
 
@@ -201,39 +206,41 @@ class AddPositionsPage extends React.Component{
             <form className="employee-form" onSubmit={e => this.handleSubmit(e)}>
 
                 <section className="section-form">
-                    <label htmlFor="name">Position:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="text"
-                        className="name-box" 
-                        name="name" 
-                        id="name" 
-                        placeholder="Register"
-                        value={this.state.position}
-                        onChange={(e) => this.updatePosition(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+                        <label htmlFor="name">Position:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="text"
+                            className="name-box" 
+                            name="name" 
+                            id="name" 
+                            placeholder="Register"
+                            value={this.state.position}
+                            onChange={(e) => this.updatePosition(e.target.value)}
+                        />
+                    </div>
                 </section>
 
                 <section className="section-form">
-
-                    <label htmlFor="importance">Importance:</label>
-                    {/* Availability SELECTION */}
-                    <select id='importance' onChange={(e) => this.updateImportance(e.target.value)}>
-                        
-                        <option value={1} selected>Low</option>
-                        <option value={2}>Medium</option>    
-                        <option value={3}>High</option>              
-                    </select>
-
+                    <div className="section-form-inner">
+                        <label htmlFor="importance">Importance:</label>
+                        {/* Availability SELECTION */}
+                        <select id='importance' onChange={(e) => this.updateImportance(e.target.value)}>
+                            
+                            <option value={1} selected>Low</option>
+                            <option value={2}>Medium</option>    
+                            <option value={3}>High</option>              
+                        </select>
+                    </div>
                 </section>
 
                 <section className="section-form">
-
-                    <label htmlFor="quantity">Skill:</label>
-                    <input type="number" className='quantity-box' name="quantity" id="quantity" 
-                    value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
-                    min="1" max="10"/>
-
+                    <div className="section-form-inner">
+                        <label htmlFor="quantity">Skill:</label>
+                        <input type="number" className='quantity-box' name="quantity" id="quantity" 
+                        value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
+                        min="1" max="10"/>
+                    </div>
                 </section>
 
                 <button type='submit' className='submit'>Submit</button>
@@ -250,4 +257,4 @@ class AddPositionsPage extends React.Component{
 }
 
 
-export default AddPositionsPage;
+export default withRouter(AddPositionsPage);

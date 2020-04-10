@@ -1,13 +1,23 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 
 import './LoginPage.css';
+import AuthApiService from '../services/auth-api-service';
 
-import TokenService from '../services/token-service'
-import AuthApiService from '../services/auth-api-service'
+import {AltInfoContext } from '../AltInfoContext';
 
-class LoginPage extends React.Component{ 
+
+class LoginPage extends React.Component {
+    
+    /* 
+        ---------------------------------
+        |            CONTEXT            |
+        ---------------------------------
+    */
+   static contextType = AltInfoContext;
+
+
         /* 
             ---------------------------------
             |            STATE              |
@@ -18,23 +28,22 @@ class LoginPage extends React.Component{
         this.state = {
             business_name: '',
             password: '',
-            errorClass:'error hide',
+            errorClass:'message hide',
             errorMessage: '',
         };
     }   
-
 
     //ERROR HANDLING
 
     clearError = () => {
         this.setState({
-            errorClass:"error hide"
+            errorClass:"message hide"
         });
     }
 
     showError = (message) => {
         this.setState({
-            errorClass:"error",
+            errorClass:"message",
             errorMessage: message
         });
     }
@@ -49,12 +58,10 @@ class LoginPage extends React.Component{
             password: password,
         })
         .then( res => {
-            this.clearError()
-
-            this.props.pushHome();
-         
-            window.location.reload(false)
-
+            this.clearError();
+            const { history } = this.props;
+            history.push('/');
+            this.context.fetchDatabase()
         })
         .catch(err => {
             this.showError('Incorrect Business Name or Password');
@@ -91,32 +98,39 @@ class LoginPage extends React.Component{
             <form className="user-info-form" onSubmit={e => this.handleSubmit(e)}>
 
                 <section className="section-form">
-                    <label htmlFor="business_name">Business Name:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="text"
-                        className="name-box" 
-                        name="business_name" 
-                        id="business_name" 
-                        value={this.state.business_name}
-                        onChange={(e) => this.updateBusinessName(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+                        <label htmlFor="business_name">Business Name:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="text"
+                            className="name-box" 
+                            name="business_name" 
+                            id="business_name" 
+                            value={this.state.business_name}
+                            onChange={(e) => this.updateBusinessName(e.target.value)}
+                        />
+                    </div>
+
                 </section>
                 <section className="section-form">
-                    <label htmlFor="password">Password:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="password"
-                        className="name-box" 
-                        name="password" 
-                        id="password" 
-                        value={this.state.password}
-                        onChange={(e) => this.updatePassword(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+                        <label htmlFor="password">Password:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="password"
+                            className="name-box" 
+                            name="password" 
+                            id="password" 
+                            value={this.state.password}
+                            onChange={(e) => this.updatePassword(e.target.value)}
+                        />
+                    </div>
                 </section>
                 
 
                 <button type='submit' className='submit'>Submit</button>
+
+                <p> <span className="demo-info">Demo account's log in info:<br></br>Business name: <b>Fake Company Inc</b><br></br>Password: <b>Password5!</b></span> </p>
 
                 <section className={this.state.errorClass}>
                     <p>{this.state.errorMessage}</p>
@@ -129,4 +143,4 @@ class LoginPage extends React.Component{
 }
 
 
-export default LoginPage;
+export default withRouter(LoginPage);

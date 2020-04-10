@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import './SchedulePage.css';
 
@@ -11,7 +11,6 @@ import {InfoContext } from '../InfoContext';
 import TokenService from '../services/token-service'
 import config from '../config'
 
-import levels from '../Levels';
 const { hoursPM, hoursAM } = require('../Hours');
 
 
@@ -27,7 +26,7 @@ class SchedulePage extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          in_time: [],
+          in_time: 0,
           out_time: [],
           position: '',
           skill: 0,
@@ -52,6 +51,12 @@ class SchedulePage extends React.Component{
         |            METHODS            |
         ---------------------------------
     */
+   logout = () => {
+
+    this.context.logout();
+    const { history } = this.props;
+    history.push('/');
+}
 
    clearAlert = () => {
         this.setState({
@@ -61,7 +66,7 @@ class SchedulePage extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
 
@@ -143,11 +148,15 @@ class SchedulePage extends React.Component{
         console.log('employee id',id);
         console.log('employee out',out);
 
-        if(out==0){
+        if(out===0){
             out=this.context.dayData[0].close_time;
         }
 
         console.log('employee NEW out',out);
+
+        this.setState({
+            in_time: inTime
+        });
 
         //verify it's legal
 
@@ -194,7 +203,7 @@ class SchedulePage extends React.Component{
         console.log('employee id',id);
         console.log('employee inTime',inTime);
 
-        if(inTime==0){
+        if(inTime===0){
             inTime=this.context.dayData[0].open_time;
         }
 
@@ -242,7 +251,8 @@ class SchedulePage extends React.Component{
             this.context.updateEmployees();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -271,7 +281,8 @@ class SchedulePage extends React.Component{
             this.context.updateEmployees();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -299,7 +310,8 @@ class SchedulePage extends React.Component{
             this.context.updateEmployees();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -328,7 +340,8 @@ class SchedulePage extends React.Component{
             this.context.updatePositions();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -383,7 +396,7 @@ class SchedulePage extends React.Component{
                     <p>{this.state.alertMessage}</p>
             </section>
 
-            <div className='list-stle'>
+            <div className='list-style'>
                     
                 <ul className="display-list-employees">
 
@@ -405,19 +418,19 @@ class SchedulePage extends React.Component{
                                 }
 
                                 {/* IN TIME */}
-                                <select className='scheduler-hours'  onChange={(e) => this.updateInTime(e.target.value,employee.id,employee.out_time)}>
+                                <select className='scheduler-hours' value={this.state.in_time} onChange={(e) => this.updateInTime(e.target.value,employee.id,employee.out_time)}>
                                     {/* If the operation hour list for this company is blank (an empty list) */}
                                     {
 
                                     operationHours.map(businessDay =>  
                                             //iterate through each hour
-                                            hoursAM.map(hour =>
+                                            hoursAM.map( (hour, id) =>
                                                 //if hour fits in the hour of operations (can't open the hour the business closes)
                                                 (hour.id >= parseInt(businessDay.open_time) && hour.id < parseInt(businessDay.close_time) )
                                                     //if the hour is the employees "in time"
-                                                    ?(hour.id == parseInt(employee.in_time))
-                                                        ?<option value={hour.time} selected>{hour.time}</option>
-                                                        :<option value={hour.time}>{hour.time}</option>
+                                                    ?(hour.id === parseInt(employee.in_time))
+                                                        ?<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
+                                                        :<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
                                                     :null
                                             )             
                                         )
@@ -433,14 +446,14 @@ class SchedulePage extends React.Component{
 
                                     operationHours.map(businessDay =>  
                                             //iterate through each hour
-                                            hoursPM.map(hour =>
+                                            hoursPM.map( (hour, id) =>
                                                 //if hour fits in the hour of operations (can't close the hour the business opens)
                                                 (hour.id > parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                                     //if the hour is the employees "in time"
                                                     //also, if the "out time" for the employee is still defaulted to "0" then it needs to be swapped with the actual close time
-                                                    ?(hour.id == ( parseInt(employee.out_time)===0? this.context.dayData[0].close_time : employee.out_time ) )
-                                                        ?<option value={hour.time} selected>{hour.time}</option>
-                                                        :<option value={hour.time}>{hour.time}</option>
+                                                    ?(hour.id === ( parseInt(employee.out_time)===0? this.context.dayData[0].close_time : employee.out_time ) )
+                                                        ?<option key={id} className='option-time' value={hour.time} selected>{hour.time}</option>
+                                                        :<option key={id} className='option-time' value={hour.time}>{hour.time}</option>
                                                     :null
                                             )             
                                         )
@@ -471,4 +484,4 @@ class SchedulePage extends React.Component{
 }
 
 
-export default SchedulePage;
+export default withRouter(SchedulePage);

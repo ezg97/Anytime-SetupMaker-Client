@@ -11,13 +11,14 @@
     margin-bottom: 20px;
 }
 
-.list-stle{
+.list-style{
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
 
 .display-list-employees{
     display: flex;
@@ -31,7 +32,7 @@
 .list-element{
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 
     padding: 5px;
@@ -134,6 +135,19 @@
 
 .message{
     padding-bottom: 10px;
+}
+
+ .scheduler-hours, .list-style .emp-name {
+    min-height: 70px;
+    font-size: 90%;
+    text-align: center;
+    
+}
+
+.emp-name{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /*---------------- RESPONSIVE LAYOUT ----------------*/

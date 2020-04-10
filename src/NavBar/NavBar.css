@@ -10,10 +10,8 @@
 
     background-color: #383e42;
     color: white;
-    border-bottom: 1px solid grey;
-    
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 
     position: fixed;
@@ -33,13 +31,6 @@
     font-size: 18px;
 }
 
-.logos span a{
-    color: transparent;
-   text-shadow: 0 0 0 white;
-
-   cursor: pointer;
-}
-
 .home{
     font-size: 35px;
     font-weight: bold;
@@ -50,30 +41,30 @@
     font-weight: bold;
 }
 
+/* logos links */
+.logos span:nth-child(1) a{
+    color: transparent;
+    text-shadow: 0 0 0 white;
+    font-size: 28px;
+    font: bold;
+    cursor: pointer;
+}
+.logos span:nth-child(2) a{
+    color: transparent;
+    text-shadow: 0 0 0 white;
+    font-size: 22px;
+    font: bold;
+    cursor: pointer;
+}
 
 /*
-    Nav Links
+Links
 */
-
-
-/* All links */
-.navLink a{
-    color: black;
-}
-
-/* Visited must be above "focus" or "hover" or else it will override those*/
-.navLink a:visited{
-    color: black;
-}
-
-.navLink a:hover, .navLink a:focus{
-    color: grey;
-} 
-
 
 /* Specific for just the links in the Navbar */
 .navbar li a{
     color: white;
+    font-size: 12px;
 }
 
 /* Visited must be above "focus" or "hover" or else it will override those*/
@@ -81,9 +72,20 @@
     color: white;
 }
 
-.navbar li a:hover, .navbar li a:focus{
+.navbar li a:hover, .navbar li a:focus,
+.logos span a:hover{
     color: grey;
 } 
+
+/* Landing page links */
+.line{
+    padding: 5px;
+}
+
+.navbar a{
+    text-decoration: none;
+}
+
 
 
 
@@ -100,15 +102,30 @@
     
         padding: 2%;
     }
-    .app_nav ul li{
+    .navbar li a{
         font-size: 23px;
     }
+
 
     .home{
         font-size: 33px;
     }
     .log-out{
         font-size: 23px;
+    }
+
+    .logos span:nth-child(1) a{
+        font-size: 34px;
+        margin-right: 5px;
+        
+    }
+    .logos span:nth-child(2) a{
+        font-size: 26px;
+    }
+
+    .line{
+        padding: 10px;
+        font: bold;
     }
     
 }
@@ -118,7 +135,7 @@
         COMPUTER SCREEN LARGE 
 ----------------------*/
 @media screen and (min-width: 1024px) {
-    .app_nav ul li{
+    .navbar li a{
         font-size: 28px;
     }
 
@@ -127,6 +144,19 @@
     }
     .log-out{
         font-size: 28px;
+    }
+
+    .line{
+        padding: 15px;
+    }
+
+    .logos span:nth-child(1) a{
+        font-size: 48px;
+        margin-right: 10px;
+        
+    }
+    .logos span:nth-child(2) a{
+        font-size: 36px;
     }
     
 }

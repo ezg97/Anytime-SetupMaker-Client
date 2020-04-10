@@ -1,24 +1,26 @@
 .back{
-    padding-top: 55px;
-
     float: left;
 
     background-color: #383e42; 
+    
+    margin-bottom: 35px;
+
 }
 
+
 .back-button{
+
     color: white;
 
     background-color: #383e42; 
 
     text-align: start;
-    padding: 6px;
+    padding: 4px;
     /* to center the back icon */
     padding-right: 8px; 
 
-
     font-weight: bold;
-    font-size: 26px;
+    font-size: 22px;
 }
 
 .back-button:focus, .back-button:hover{
@@ -50,65 +52,15 @@
     line-height: 2;
 }
 
-/* - Section of the form -*/
-.section-form{
-    background-color: #f8f8f8;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-    width: 90%;
-
-    padding:10px;
-    font-size: 20px;
-
-    
-    margin-bottom:15px;
-}
-
-
 .employee-form section{
     background-color: rgb(240,240,240);
 
 }
 
-/* - Labels of the form -*/
 .section-form label{
     margin-right: 2%;
-    margin-bottom: 15px;
     font-weight: bold;
 }
-
-/* - Select of the form -*/
-.section-form select{
-    border: 1px solid black;
-
-    font-weight: bold;
-    padding: 1%;
-
-    width: 40%;
-}
-
-/* - Input box of the form -*/
-.section-form .name-box, .quantity-box, #availability{
-    border: 1px solid black;
-    width: 50%;
-    max-width: 250px;
-    padding: 1%;
-}
-
-#availability{
-    margin-right: -1px;
-}
-
-.section-form select{
-    border: 1px solid black;
-
-    padding: 1%;
-}
-
 
 .submit{
     margin-top: 20px;
@@ -131,57 +83,31 @@
 
    /*---------------- RESPONSIVE LAYOUT ----------------*/
 
-
+ /* ----------
+            COMPUTER SCREEN height  
+    ----------------------*/
+    @media screen and (min-height: 700px) {
+      
+        .back{
+            margin-top: 5%;
+        }
+  
+    }
+    
     /* ----------
             COMPUTER SCREEN REGULAR 
     ----------------------*/
     @media screen and (min-width: 768px) {
       
         .back{
-            padding-top: 60px;
+            padding-top: 30px;
+            margin-bottom: 4%;
         }
         
       
         #select-employees{
             font-size: 16px;
         }
-
-        .section-form{
-            background-color: #f8f8f8;
-
-            margin:0;
-            padding:0;
-        
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        
-            padding: 1%;
-        
-            font-size: 20px;
-        }
-
-        .section-form .quantity-box{
-            padding: 10px;
-        }
-
-        /* .section-form{
-            background-color: #f8f8f8;
-    
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            
-            width: 90%;
-        
-            padding:10px;
-            font-size: 20px;
-        
-            padding-right:38%;
-            margin-bottom:15px;
-        } */
-    
   
     }
       /* ---------------------- 
@@ -192,20 +118,9 @@
         .back{
             display: none
         }
-        .hours{
-            font-size: 35px;
-        }
-    
         #select-employees{
             font-size: 18px;
-        }
-
-        .section-form{
-
-            font-size: 30px;
-        }
-
-        
+        }        
       
     }
   

@@ -1,6 +1,5 @@
-const { hours } = require('./Hours');
 
-function setupAlgo(employees, position, operationHours) {
+export function setupAlgo(employees, position, operationHours) {
 
     console.log('start setupAlgo - - -');
 
@@ -13,16 +12,8 @@ function setupAlgo(employees, position, operationHours) {
     let mediumLevel = [];
     let lowLevel = [];
 
-    let temp1 = [];
-    let temp2 = [];
-    let temp3 = [];
 
-
-    if (employees != [] && position != [] && operationHours != []) {
-
-        // reqPos = position.sort( (a,b) => a-b );
-        // reqEmp = employees.sort( (a,b) => a-b );;
-
+    if (employees !== [] && position !== [] && operationHours !== []) {
         // Filter out any position or employee that is not required for this setup
         reqPos = position.filter( pos => pos.pos_required === true);
         reqEmp = employees.filter( emp => emp.emp_required === true );
@@ -32,8 +23,6 @@ function setupAlgo(employees, position, operationHours) {
         reqPos.sort( (a,b) => ( b.pos_importance - a.pos_importance && b.pos_skill - a.pos_skill ));
         reqEmp.sort( (a,b) => ( b.emp_skill - a.emp_skill));
 
-        
-        
         for (let i = parseInt(operationHours[0].open_time); i < parseInt(operationHours[0].close_time); i++) {
             
             // create temporary deep copy of employee list
@@ -45,32 +34,36 @@ function setupAlgo(employees, position, operationHours) {
             // - 3) if the "in time" wasn't set (default at 0 aka begging of hour of operations), but the "out time" was
             // - 4) if the "in time" was set, but the "out time" wasn't (default at 0 aka end of hour of operations)
             tempEmpList = tempEmpList.filter(obj => {
-                if (i >= parseInt(obj.in_time) && i <= parseInt(obj.out_time) || parseInt(obj.in_time)==0 && parseInt(obj.out_time) == 0 || 
-                     parseInt(obj.in_time) == 0 && i <= parseInt(obj.out_time) || i >= parseInt(obj.in_time) && parseInt(obj.out_time) == 0)
+                if ( (i >= parseInt(obj.in_time) && i <= parseInt(obj.out_time)) || (parseInt(obj.in_time)===0 && parseInt(obj.out_time) === 0) || 
+                     (parseInt(obj.in_time) === 0 && i <= parseInt(obj.out_time)) || i >= (parseInt(obj.in_time) && parseInt(obj.out_time) === 0) )
                 {
-                    return obj;
+                    return true;
                 }
+                return false;
             });
 
             //filter for list of high level employees (7-10)
             highLevel = tempEmpList.filter(obj => {
                 if (parseInt(obj.emp_skill) >= 70) {
-                    return obj;
+                    return true;
                 }
+                return false;
 
             });
             //filter for list of medium level employees (4-6)
             mediumLevel = tempEmpList.filter(obj => {
                 if (parseInt(obj.emp_skill) >= 40 && parseInt(obj.emp_skill) < 70 ) {
-                    return obj;
+                    return true;
                 }
+                return false;
 
             });
             //filter for list of low level employes (1-3)
             lowLevel = tempEmpList.filter(obj => {
                 if (parseInt(obj.emp_skill) >= 1 && parseInt(obj.emp_skill) < 40) {
-                    return obj;
+                    return true;
                 }
+                return false;
 
             });
             
@@ -79,18 +72,15 @@ function setupAlgo(employees, position, operationHours) {
 
             //iterate through position
             reqPos.forEach(obj => {
-
-
                 //if pos_skill needs high level AND there are high level employees:
                 if (parseInt(obj.pos_importance) === 3 && highLevel.length > 0) {
                     //store in setupList. Take the name of the first person in the "highLevel" group bc it's been sorted so the best is at the top
                     setupList[i - parseInt(operationHours[0].open_time)].push({'emp': highLevel[0].emp_name, 'pos': obj.pos_name});
                     //delete from the employee list (temp list that is reacreated each hour):  delete the first employee bc that's who was taken
                     highLevel.splice(0,1);
-
                 }
                 //if pos_skill needs med level OR there are NO high level employees AND there are medium level employees:
-                else if ((parseInt(obj.pos_importance) === 2 || highLevel.length == 0) && mediumLevel.length > 0) {
+                else if ((parseInt(obj.pos_importance) === 2 || highLevel.length === 0) && mediumLevel.length > 0) {
                     //iterate through med lvl employees and pick the best
                     if (mediumLevel.length>0) {
                         //store in setupList. Take the name of the first person in the "mediumLevel" group bc it's been sorted so the best is at the top
@@ -101,7 +91,7 @@ function setupAlgo(employees, position, operationHours) {
 
                 }
                 //if pos_skill needs med level OR there are NO high level employees OR there are NO medium level employees AND there are low level employees::
-                else if ((parseInt(obj.pos_importance) === 1 || highLevel.length == 0 || mediumLevel.length == 0) && lowLevel.length > 0) {
+                else if ((parseInt(obj.pos_importance) === 1 || highLevel.length === 0 || mediumLevel.length === 0) && lowLevel.length > 0) {
                     //iterate through low lvl employees and pick the best
                     if (lowLevel.length>0) {
                         //store in setupList. Take the name of the first person in the "lowLevel" group bc it's been sorted so the best is at the top
@@ -109,11 +99,8 @@ function setupAlgo(employees, position, operationHours) {
                         //delete from the employee list (temp list that is reacreated each hour):  delete the first employee bc that's who was taken
                         lowLevel.splice(0,1);
                     }
-
-                }
-             
+                }   
             });
-
         }
 
         return setupList;
@@ -121,22 +108,3 @@ function setupAlgo(employees, position, operationHours) {
 
 }
             
-   
-
-
-module.exports = { setupAlgo }
-
-
-      //             return {
-            //                 'name':emp.emp_name,
-            //                 'sunday': `${startTime[0] == undefined? 'OFF':startTime[0]+'-'+endTime[0]}`,
-            //                 'monday': `${startTime[1] == undefined? 'OFF':startTime[1]+'-'+endTime[1]}`,
-            //                 'tuesday': `${startTime[2] == undefined? 'OFF':startTime[2]+'-'+endTime[2]}`,
-            //                 'wednesday': `${startTime[3] == undefined? 'OFF':startTime[3]+'-'+endTime[3]}`,
-            //                 'thursday': `${startTime[4] == undefined? 'OFF':startTime[4]+'-'+endTime[4]}`,
-            //                 'friday': `${startTime[5] == undefined? 'OFF':startTime[5]+'-'+endTime[5]}`,
-            //                 'saturday': `${startTime[6] == undefined? 'OFF':startTime[6]+'-'+endTime[6]}`
-            //             }
-            //         })
-            //     return schedule;
-            // }

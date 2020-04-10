@@ -16,7 +16,7 @@
         justify-content: center;
         align-items: center;
 
-        border-bottom: 1px dashed gray;
+        line-height: 1;
     }
     
     .header h1{
@@ -25,13 +25,15 @@
     }
 
     /* Styling made for any page that uses a CRUD operation */
-    .crud  .header{
+    .crud,  .header{
          margin-top: 15%; 
         border-bottom: none;
     }
     
     .crud .header > p{
         margin-top:5%;
+        padding-bottom:50px;
+
         color: grey;
     }
 
@@ -49,11 +51,10 @@
     @media screen and (min-width: 768px) {
 
         .header {
-
-            margin-top: 4%;
+            font-size: 24px;
         }
 
-        .crud .header{
+        .crud, .header{
             margin-top: 4%;
         }
 
@@ -74,11 +75,10 @@
     @media screen and (min-width: 1024px) {
 
         .header {
-
-            margin-top: 4%;
+            font-size: 28px;
         }
 
-        .crud .header{
+        .crud, .header{
             margin-top: 4%;
         }
 

@@ -1,9 +1,35 @@
 .message{
-    color: red;
-    line-height: 1;
-    padding-top:5px;
+    width: 100%;
+    line-height: 2;
+    padding:2px;
+    margin-top: 10px;
+
+    color: white;
+    /* Message class is not being used in any other CSS styling file
+        so '!important' won't cause any overiding issues, however,
+        for some reason it's not applying without it. I could spend
+        hours digging through CSS files to find some stupid vague
+        mistake that I made or I could just slap this on...
+        I don't think it'll harm anything */
+    background-color: red !important;
+}
+
+.message > p {
+    font: bolder;
+    font-size: 18px;
 }
 
 .success{
-    color: green;
+    width: 100%;
+    line-height: 2;
+    padding:2px;
+    margin-top: 10px;
+
+    color: white;
+    background-color: green !important;
+}
+
+.success > p {
+    font: bolder;
+    font-size: 18px;
 }

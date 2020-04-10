@@ -7,6 +7,12 @@ export const InfoContext = createContext({
     dayData: null,//operation hours
     scheduleData: null,
     fetched: null,
+    logout: () => {
+
+    },
+    clearState: () => {
+
+    },
     checkFetch: () => {
 
     },

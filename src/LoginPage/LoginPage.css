@@ -50,20 +50,48 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-}
-
-.user-info-form > .section-form{
-    align-self: flex-end;
 
 }
 
-.section-form{
-    background-color: rgb(240,240,240);
+ .section-form{
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
 }
 
-.error{
-    color: red;
+.section-form-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.section-form-inner > label {
+    margin-bottom: 10px;
+}
+
+.section-form-inner > input {
+    width: 100%;
+    border: 1px solid black;
+    max-width: 150px;
+    padding: 2px;
+}
+
+.section-form-inner > select {
+    width: 100%;
+    border: 1px solid black;
+    max-width: 150px;
+    padding: 2px;
+}
+
+.demo-info{
+    font-size: 13px;
+    color: black;
+  }
+
 /*---------------- RESPONSIVE LAYOUT ----------------*/
 
 
@@ -81,10 +109,26 @@
             font-size: 16px;
         }
 
-        .user-info-form > .section-form{
-                    
-            font-size: 22px;
+        .section-form{
+            font-size: 28px;
         }
+
+        .section-form-inner > input {
+            width: 100%;
+            max-width: 250px;
+            font-size: 20px;
+        }
+
+        .section-form-inner > select {
+            width: 100%;
+            max-width: 250px;
+            font-size: 20px;
+        }
+       
+        .demo-info{
+            font-size: 16px;
+            color: black;
+          }
   
     }
       /* ---------------------- 
@@ -101,18 +145,94 @@
         #select-employees{
             font-size: 16px;
         }
+        .section-form{
+            width: 90%;
+            font-size: 30px;
 
-        .user-info-form > .section-form{
-                    
+            display: flex;
+            flex-direction: column;
+            justify-content: center !important;
+            align-items: flex-start;
+        
+            margin-bottom: 20px;
+        }
+        
+        .section-form-inner {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .section-form-inner > label {
+            width: 35%;
+            text-align: end;
+        }
+        .section-form-inner > input {
+            width: 65%;
+            max-width: 330px;
+            border: 1px solid black;
             font-size: 30px;
         }
-        .user-info-form > .section-form{
-            align-self: center;
-        
+
+        .section-form-inner > select {
+            width: 65%;
+            max-width: 330px;
+            border: 1px solid black;
+            font-size: 30px;
         }
+
+        .submit{
+            border: 1px solid black;
+        }
+
+        .demo-info{
+            font-size: 18px;
+            color: black;
+          }
         
-  
+          
 }
+
+/* ---------------------- 
+            COMPUTER SCREEN LARGER 
+      ----------------------*/
+      @media screen and (min-width: 1440px) {
+        .section-form-inner > label {
+            width: 35%;
+            text-align: end;
+        }
+        .section-form-inner > input {
+            width: 65%;
+            max-width: 330px;
+            border: 1px solid grey;
+        }
+        .section-form-inner > select {
+            width: 65%;
+            max-width: 330px;
+            border: 1px solid grey;
+        }
+      }
+
+      /* ---------------------- 
+            COMPUTER SCREEN LARGEST 
+      ----------------------*/
+      @media screen and (min-width: 1440px) {
+        .section-form-inner > label {
+            width: 40%;
+            text-align: end;
+        }
+        .section-form-inner > input {
+            width: 60%;
+            max-width: 330px;
+            border: 1px solid grey;
+        }
+        .section-form-inner > select {
+            width: 60%;
+            max-width: 330px;
+            border: 1px solid grey;
+        }
+      }
 
 
 

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Route, Switch , NavLink} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 
 import './App.css'
 
 import InfoContext from '../InfoContext';
+import AltInfoContext from '../AltInfoContext';
 
 import LandingPage from '../LandingPage/LandingPage';
 import Demo from '../Demo/Demo';
@@ -19,13 +20,14 @@ import HoursPage from '../HoursPage/HoursPage';
 import SchedulePage from '../SchedulePage/SchedulePage'
 import UnknownPage from '../UnknownPage/UnknownPage';
 
+import LoginPage from '../LoginPage/LoginPage';
+import SignupPage from '../SignupPage/SignupPage';
+
 
 import TokenService from '../services/token-service'
 import config from '../config'
 
 import AuthApiService from '../services/auth-api-service'
-import { getByTestId } from '@testing-library/react';
-//da
 
 class App extends Component {
   
@@ -36,7 +38,6 @@ class App extends Component {
       hours: [],
       employees: [],
       position: [],
-      schedule: [],
       fetched: 'not updated',
       requests: [
                 {   
@@ -52,11 +53,6 @@ class App extends Component {
                   url:`${config.URL}/business/${TokenService.getId()}`,
                   table:'position',
               },
-
-                {   
-                    url:`${config.URL}/business/${TokenService.getId()}`,
-                    table:'schedule',
-                },
       ],
     };
   }
@@ -90,14 +86,14 @@ class App extends Component {
   componentDidMount() {
 
 
-    this.fetchDatabase();
 
     /* if a user is logged in */
     if (TokenService.hasAuthToken()) {
-                /*
+        /*
           Tell the token service to read the JWT, looking at the exp value
           and queue a timeout just before the token expires
         */
+        this.fetchDatabase();
 
         TokenService.queueCallbackBeforeExpiry(() => {
             /* the timoue will call this callback just before the token expires */
@@ -116,10 +112,29 @@ class App extends Component {
     TokenService.clearCallbackBeforeExpiry()
   }
 
-  
+  logout = () => {
+       
+      TokenService.clearAuthToken()
+      /* when logging out, clear the callbacks to the refresh api and idle auto logout */
+      TokenService.clearCallbackBeforeExpiry();
+      this.clearState();
+  }
+
+  clearState = () => {
+    this.setState({
+      business: [],
+      hours: [],
+      employees: [],
+      position: [],
+      fetched: 'not updated',
+      requests: [],
+    });
+  }
 
   fetchDatabase = () => {
-    //
+    //first update the requests
+    this.updateRequests();
+
     Promise.all(this.state.requests.map(request =>
         fetch(request.url,
           {   
@@ -131,15 +146,19 @@ class App extends Component {
         )
         .then(data => {
             if (!data.ok){
-                data=[];
-                return data;
+              if(data.status === 401) {
+                return data.json().then(e => Promise.reject(e));
+              }
+              else{
+                throw new Error(data.status)
+              }
             }
 
             return data.json();
         })
 
       ))
-      .then( ([hours, employees, position, schedule]) => {
+      .then( ([hours, employees, position]) => {
 
             let business = fetch(`${config.URL}/${TokenService.getId()}`,
             {
@@ -149,30 +168,53 @@ class App extends Component {
                 }
             })
             .then(data => {
-              
+              console.log('response 1', data);
               if (!data.ok){
-                  return data.json().then(e => Promise.reject(e));}
+                return data.json().then(e => Promise.reject(e));
+              }
 
               return data.json();
             });
 
          
-            return Promise.all([business, hours, employees, position, schedule]);
+            return Promise.all([business, hours, employees, position]);
       })
-      .then( ([business, hours, employees, position, schedule]) => {  
+      .then( ([business, hours, employees, position]) => {  
             
 
             //fetch has been completed and the state has been updated so set "fetched" to true
         
-            this.setState({business, hours, employees, position, schedule, fetched: true});
+            this.setState({business, hours, employees, position, fetched: true});
 
             
       })
       .catch(error => {
-            console.error({error});
+          this.logout();
       });
   }
   //methods
+
+    //update the requests with the current id, since it's only initialized when the page is loaded.
+    updateRequests = () => {
+      this.setState({
+        requests: [
+            {   
+                url:`${config.URL}/business/${TokenService.getId()}`,
+                table:'operation',
+            },
+
+            {   
+                url:`${config.URL}/business/${TokenService.getId()}`,
+                table:'employee',
+            },
+            {   
+              url:`${config.URL}/business/${TokenService.getId()}`,
+              table:'position',
+          },
+        ],
+      });
+    }
+      
   updateEmployees = () => {
     fetch(`${config.URL}/business/${TokenService.getId()}`,
         {
@@ -184,24 +226,17 @@ class App extends Component {
         })
         .then( (employees) => {
           
-          if (!employees.ok){
-
-            //404 not found is the error received when the last item is deleted from the list
-            if(employees.status != 404)
+          if (!employees.ok) {
               return employees.json().then(e => Promise.reject(e));
-
-            //it was a 404 error so the last position has been deleted, return an empty list
-            return [];
           }
           
-
           return employees.json();
       })
       .then( (employees) => {
           this.setState({employees});
       })
       .catch(error => {
-          console.error({error})
+        this.logout();
       });
 
   }
@@ -212,30 +247,21 @@ class App extends Component {
             headers: {
                 'table':'position',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
-
             }
         })
         .then( (position) => {
           if (!position.ok){
-
-            //404 not found is the error received when the last item is deleted from the list
-            if(position.status != 404)
               return position.json().then(e => Promise.reject(e));
-
-            //it was a 404 error so the last position has been deleted, return an empty list
-            return [];
           }
           
 
           return position.json();
       })
       .then( (position) => {
-        console.log('setting the position state: ',position)
           this.setState({position});
       })
       .catch(error => {
-        console.log('err??')
-          console.error({error})
+        this.logout();
       });
 
   }
@@ -261,220 +287,166 @@ class App extends Component {
           this.setState({hours});
       })
       .catch(error => {
-          console.error({error})
+        this.logout();
       }); 
   }
-
-  updateSchedule = () => {
-    fetch(`${config.URL}/business/${TokenService.getId()}`,
-        {
-            headers: {
-                'table':'schedule',
-                'Authorization':`bearer ${TokenService.getAuthToken()}`
-
-            }
-        })
-        .then( (schedule) => {
-          
-          if (!schedule.ok)
-              return schedule.json().then(e => Promise.reject(e));
-          
-
-          return schedule.json();
-      })
-      .then( (schedule) => {
-          this.setState({schedule});
-      })
-      .catch(error => {
-          console.error({error})
-      });    
-  }
-
-  //Sorts a list numerically, with the exception of putting 12 on the top, and returns the sorted list.
-  // @param {array} list - contains objects which contain a property called "shift_time".
-  numberSort = (list) => {
-    return list.sort(function(a, b) {
-      //if a = 12, then return less than 0 (aka "a" is first)
-      //if a != 12, then if b = 12 then return greater than 0 (aka "b" is first)
-      //if b != 12, then perform "a-b" to see which is greater (at this point we're not dealing with 12 so we sort like normal)
-      return (a.shift_time===12)? -1 : (b.shift_time===12)? 1 : parseInt(a.shift_time) - parseInt(b.shift_time);
-    });
-  }
-
-  //Sorts a list alphabetically and returns the sorted list.
-  // @param {array} list - contains objects which contain a property called "midday".
-  alphaSort = (list) => {
-    return list.sort(function(a, b) {
-      let textA = a.midday.toUpperCase();
-      let textB = b.midday.toUpperCase();
-   
-      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; 
-    });
-  }
-
-  //Sorts the hours of the workday.
-  sort = (list) => {
-    //store in variable "sortedList"
-    let sortedList = this.alphaSort(list);
-
-    //USING the sortedList list: splice or separate the list of objects when (if) "PM" is reached.
-
-    //find the index in the list where the object's property "midday" begins storing "PM"
-    let indexOfSplit = sortedList.findIndex(obj => {
-      if(obj.midday === "PM"){
-        return obj;
-      }
-    });
-
-    //If "PM" located inside the list (aka "-1" was NOT returned)
-    if(indexOfSplit>=0){
-      
-      // Separate the alphabetically sorted list into two halves: 
-      //  1) list containing only the AM hours. 
-      //  2) list containing only the PM hours.
-      let amList = sortedList.slice(0,indexOfSplit);
-      let pmList = sortedList.slice(indexOfSplit);
-
-      // Verify that the lists are not empty or not "undefined" before sorting the lists numerically
-      if(!(amList===undefined || amList.length == 0)){
-        amList = this.numberSort(amList);
-      }
-      if(!(pmList===undefined || pmList.length == 0)){
-        pmList = this.numberSort(pmList);
-      }
-
-      // Merge both of the lists together and store them in "sortedList"
-      sortedList = [...amList, ...pmList];
-    }
-    else{
-      if(!(sortedList===undefined || sortedList.length == 0)){
-        //return the amList sorted because the company is only open during "AM", not "PM"
-        return this.numberSort(sortedList);
-      }
-    }
-    
-    //return the merged sorted list
-    return sortedList;
-  }
-
-
 
   //render
   render(){
     
+    if (TokenService.hasAuthToken()) {
+      return (
+        <InfoContext.Provider value={{businessData: this.state.business,
+          employeeData: this.state.employees, 
+          dayData: this.state.hours, 
+          positionData: this.state.position,
+          fetched: this.state.fetched,
+          /* METHODS */
+          logout: this.logout,
+          clearState: this.clearState,
+          checkFetch: this.checkFetch,
+          updateEmployees: this.updateEmployees,
+          updatePositions: this.updatePositions,
+          updateBusinessDay: this.updateBusinessDay}}>
 
-    return (
-      <InfoContext.Provider value={{businessData: this.state.business,
-        employeeData: this.state.employees, 
-        dayData: this.state.hours, 
-        positionData: this.state.position,
-        scheduleData: this.state.schedule,
-        fetched: this.state.fetched,
-        /* METHODS */
-        checkFetch: this.checkFetch,
-        updateEmployees: this.updateEmployees,
-        updatePositions: this.updatePositions,
-        updateSchedule: this.updateSchedule,
-        updateBusinessDay: this.updateBusinessDay}}>
-
-        <div className="container">
-          {/* NAV BAR */console.log('state',this.state)}
-          <Switch>
-
-              {/* LANDING PAGE */}
-              {/* <Route exact path='/'
-                render={(routeProps) =>
-                  <NavBar
-                    bool={'false'}
-                  />
-                }
-              /> */}
-
-              {/* SIGNED IN */}
-              <Route 
-                exact path={['/','/demo','/home','/operations','/employees', '/addEmployees','/positions','/addPositions',
-                '/hours','/schedule']}
-                render={(routeProps) =>
-                  <NavBar
-                    bool={'true'}
-                  />
-                }
-              />
-
-          </Switch>
-
-          <main role="main">
-
-            {/* MAIN TEXT SECTION */}
+          <div className="container">
+            {/* NAV BAR */console.log('state',this.state)}
             <Switch>
-              <Route exact path='/' component={HomePage} />
-
-              <Route exact path='/demo' component={Demo} />
-
-              <Route exact path='/home' component={HomePage} />
-
-              <Route exact path='/operations' 
-                render={(routeProps) =>
-                  <OperationsPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
+                {/* SIGNED IN */}
+                <Route 
+                  exact path={['/','/demo','/home','/operations','/employees', '/addEmployees','/positions','/addPositions',
+                  '/hours','/schedule']}
+                  render={(routeProps) =>
+                    <NavBar
+                      bool={'true'}
+                    />
+                  }
                 />
 
-              <Route exact path='/employees' 
-                render={(routeProps) =>
-                  <EmployeesPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />
-
-              <Route exact path='/addEmployees' 
-                render={(routeProps) =>
-                  <AddEmployeesPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />
-
-            <Route exact path='/positions' 
-                render={(routeProps) =>
-                  <PositionsPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />    
-
-              <Route exact path='/addPositions' 
-                render={(routeProps) =>
-                  <AddPositionsPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />
-
-              <Route exact path='/hours' 
-                render={(routeProps) =>
-                  <HoursPage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />
-
-              <Route exact path='/schedule' 
-                render={(routeProps) =>
-                  <SchedulePage
-                    onClickBack={() =>routeProps.history.goBack()} 
-                  />}
-                />
-             
-             <Route path='/' component={UnknownPage} />
-
-              {/* <Route exact path='/login' component={LoginPage} />
-              
-              <Route exact path='/signup' component={SignupPage} /> */}
-              
             </Switch>
 
-          </main>
+            <main role="main">
 
-        </div>
-    </InfoContext.Provider>
-    );
+              {/* MAIN TEXT SECTION */}
+              <Switch>
+                <Route exact path='/' component={HomePage} />
+
+                <Route exact path='/demo' component={Demo} />
+
+                <Route exact path='/home' component={HomePage} />
+
+                <Route exact path='/operations' 
+                  render={(routeProps) =>
+                    <OperationsPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+
+                <Route exact path='/employees' 
+                  render={(routeProps) =>
+                    <EmployeesPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+
+                <Route exact path='/addEmployees' 
+                  render={(routeProps) =>
+                    <AddEmployeesPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+
+              <Route exact path='/positions' 
+                  render={(routeProps) =>
+                    <PositionsPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />    
+
+                <Route exact path='/addPositions' 
+                  render={(routeProps) =>
+                    <AddPositionsPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+
+                <Route exact path='/hours' 
+                  render={(routeProps) =>
+                    <HoursPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+
+                <Route exact path='/schedule' 
+                  render={(routeProps) =>
+                    <SchedulePage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                    />}
+                  />
+              
+              <Route path='/' component={UnknownPage} />
+                
+              </Switch>
+
+            </main>
+
+          </div>
+      </InfoContext.Provider>
+      );
+    }
+    else {
+      return(
+        <AltInfoContext.Provider value={{
+          fetchDatabase: this.fetchDatabase}}>
+          <div className="container">
+
+          
+
+              {/* LANDING PAGE */}
+              <Route exact path='/'
+                  render={(routeProps) =>
+                      <NavBar
+                          bool={'false'}
+                      />
+                  }
+              />
+              <main role="main">
+
+                  {/* MAIN TEXT SECTION */}
+                  <Switch>
+                      <Route exact path='/' 
+                          render={(routeProps) =>
+                              <LandingPage
+                                  LoggingInBool={false} 
+                              />
+                          }
+                      />
+                  
+                  <Route exact path='/login' 
+                  render={(routeProps) =>
+                    <LoginPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                      pushHome={() => routeProps.history.push('/')}
+                    />}
+                  />
+
+                  <Route exact path='/signup' 
+                  render={(routeProps) =>
+                    <SignupPage
+                      onClickBack={() =>routeProps.history.goBack()} 
+                      pushHome={() => routeProps.history.push('/')}
+                    />}
+                  />
+
+                  <Route path='/' component={UnknownPage} />
+                
+                </Switch>
+
+              </main>
+          </div>
+        </AltInfoContext.Provider>
+        );
+    }
   }
 }
   

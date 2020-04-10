@@ -1,7 +1,6 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 
-import { Container, Row, Col } from 'react-grid-system';
 import TokenService from '../services/token-service'
 import LoadingPage from '../LoadingPage/LoadingPage';
 import {InfoContext } from '../InfoContext';

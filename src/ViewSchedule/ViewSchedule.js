@@ -7,9 +7,6 @@ import './ViewSchedule.css';
 
 import {InfoContext } from '../InfoContext';
 
-import TokenService from '../services/token-service'
-
-
 const logic = require('../test');
 
 
@@ -95,7 +92,7 @@ class ViewSchedule extends React.Component{
             
         <div className='grid-container'>
 
-            {(selectedHour != 'None')
+            {(selectedHour !== 'None')
             ?<Container className="grid" fluid style={{ lineHeight: '32px'}}>
                 <Row className='column'>
                     <Col>Position:</Col> 
@@ -106,9 +103,9 @@ class ViewSchedule extends React.Component{
                 <br />
 
                 {this.state.setup.map((hour,id) => 
-                    (id + parseInt(operationHours[0].open_time) == parseInt(selectedHour))
+                    (id + parseInt(operationHours[0].open_time) === parseInt(selectedHour))
                         ?hour.map(obj =>
-                            <Row className='row'>
+                            <Row className='row' key={id}>
                                 <Col>{obj.pos}</Col>
                                 <Col>{obj.emp}</Col>
                             </Row>  

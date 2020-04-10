@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import './HoursPage.css';
 
@@ -44,6 +44,12 @@ class HoursPage extends React.Component{
         |            METHODS            |
         ---------------------------------
     */
+    logout = () => {
+
+        this.context.logout();
+        const { history } = this.props;
+        history.push('/');
+    }
 
    clearAlert = () => {
         this.setState({
@@ -53,7 +59,7 @@ class HoursPage extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
     }
@@ -81,7 +87,7 @@ class HoursPage extends React.Component{
         console.log('open time val: ',val);
         console.log('open time army: ',armyTime);
 
-        if(armyTime != -1){
+        if(armyTime !== -1){
             this.setState({open_time: armyTime});
         }
         else{
@@ -112,7 +118,7 @@ class HoursPage extends React.Component{
         console.log('close time army: ',armyTime)
         console.log('close time val: ',val);
 
-        if(armyTime != -1){
+        if(armyTime !== -1){
             this.setState({close_time: armyTime});
         }
         else{
@@ -126,7 +132,7 @@ class HoursPage extends React.Component{
         const {open_time, close_time } = this.state;
 
         //if closes before it opens AND open AND close are not closed. OR they are both closed. 
-        if( ( close_time > open_time && close_time != -1 && open_time != -1) || ( open_time === -1 && close_time === -1) ){
+        if( ( close_time > open_time && close_time !== -1 && open_time !== -1) || ( open_time === -1 && close_time === -1) ){
 
             this.clearAlert();
 
@@ -139,7 +145,7 @@ class HoursPage extends React.Component{
                         
                         // The variables have been overridden
                         //verify that a change has been made, either to the opening our closing hour
-                        if(parseInt(open_time) != parseInt(businessDay.open_time===""? 0 : businessDay.open_time) || parseInt(close_time) != parseInt(businessDay.close_time)){
+                        if(parseInt(open_time) !== parseInt(businessDay.open_time===""? 0 : businessDay.open_time) || parseInt(close_time) !== parseInt(businessDay.close_time)){
 
                             this.patchBusinessDay(businessDay.id, open_time, close_time);
                         }
@@ -185,7 +191,8 @@ class HoursPage extends React.Component{
             this.context.updateBusinessDay();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -211,7 +218,8 @@ class HoursPage extends React.Component{
             this.context.updateBusinessDay();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -247,57 +255,58 @@ class HoursPage extends React.Component{
             <form className="employee-form"  onSubmit={e => this.handleSubmit(e)}> 
                 
                 <section className="section-form">
+                    <div className="section-form-inner">
+                        <label htmlFor="hours">Open:</label>
+                        <select className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
+                            <option value='-1'>Closed</option>
 
-                    <label htmlFor="hours">Open:</label>
-                    <select className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
-                        <option value='-1'>Closed</option>
+                            {/* If the operation hour list for this company is blank (an empty list) */}
+                            {( (operationHours? operationHours.length : null)>0 )
 
-                        {/* If the operation hour list for this company is blank (an empty list) */}
-                        {( (operationHours? operationHours.length : null)>0 )
-
-                            ?operationHours.map(businessDay =>  
-                                //iterate through each hour
-                                hoursAM.map(hour =>
-                                    //if the current hour matches the opening time hour, then show it
-                                    (hour.id == parseInt(businessDay.open_time===""? 0 : businessDay.open_time))
-                                        ?<option value={hour.time} selected>{hour.time}</option> 
-                                        :<option value={hour.time}>{hour.time}</option>
-                                )             
-                            )
-                            :hoursAM.map(hour =>
-                                <option value={hour.time}>{hour.time}</option>
-                            )
-                        }
-                    </select>
+                                ?operationHours.map(businessDay =>  
+                                    //iterate through each hour
+                                    hoursAM.map(hour =>
+                                        //if the current hour matches the opening time hour, then show it
+                                        (hour.id === parseInt(businessDay.open_time===""? 0 : businessDay.open_time))
+                                            ?<option value={hour.time} selected>{hour.time}</option> 
+                                            :<option value={hour.time}>{hour.time}</option>
+                                    )             
+                                )
+                                :hoursAM.map(hour =>
+                                    <option value={hour.time}>{hour.time}</option>
+                                )
+                            }
+                        </select>
+                    </div>
                 </section>
 
                     
                 <section className="section-form">
+                    <div className="section-form-inner">
+                        <label htmlFor="hours">Close:</label>
+                        <select className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
+                            <option value='-1'>Closed</option>
 
-                    <label htmlFor="hours">Close:</label>
-                    <select className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
-                        <option value='-1'>Closed</option>
 
+                            {/* If the operation hour list for this company is blank (an empty list) */}
+                            {( (operationHours? operationHours.length : null)>0 )
 
-                        {/* If the operation hour list for this company is blank (an empty list) */}
-                        {( (operationHours? operationHours.length : null)>0 )
-
-                            ?operationHours.map(businessDay =>  
-                                //iterate through each hour
-                                hoursPM.map(hour =>
-                                    //if the current hour matches the opening time hour, then show it
-                                    (hour.id == parseInt(businessDay.close_time))
-                                        ?<option value={hour.time} selected>{hour.time}</option>
-                                        :<option value={hour.time}>{hour.time}</option>
-                                )             
-                            )
-                            :hoursPM.map(hour =>
-                                <option value={hour.time}>{hour.time}</option>
-                            )
-                        }
-                        
-                    </select>
-
+                                ?operationHours.map(businessDay =>  
+                                    //iterate through each hour
+                                    hoursPM.map(hour =>
+                                        //if the current hour matches the opening time hour, then show it
+                                        (hour.id === parseInt(businessDay.close_time))
+                                            ?<option value={hour.time} selected>{hour.time}</option>
+                                            :<option value={hour.time}>{hour.time}</option>
+                                    )             
+                                )
+                                :hoursPM.map(hour =>
+                                    <option value={hour.time}>{hour.time}</option>
+                                )
+                            }
+                            
+                        </select>
+                    </div>
                 </section>
 
 
@@ -318,4 +327,4 @@ class HoursPage extends React.Component{
 }
 
 
-export default HoursPage;
+export default withRouter(HoursPage);

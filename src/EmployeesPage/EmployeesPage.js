@@ -3,6 +3,8 @@ import './EmployeesPage.css';
 import {InfoContext } from '../InfoContext';
 import TokenService from '../services/token-service'
 import config from '../config'
+import { withRouter } from 'react-router-dom';
+
 
 
 class EmployeesPage extends React.Component{ 
@@ -38,6 +40,12 @@ class EmployeesPage extends React.Component{
         |            METHODS            |
         ---------------------------------
     */
+   logout = () => {
+
+        this.context.logout();
+        const { history } = this.props;
+        history.push('/');
+    }
 
    clearAlert = () => {
         this.setState({
@@ -47,7 +55,7 @@ class EmployeesPage extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
 
@@ -61,20 +69,20 @@ class EmployeesPage extends React.Component{
 
         this.clearAlert();
 
-        {/* Save the name selected to STATE */}
-        if(val != "None"){
+        /* Save the name selected to STATE */
+        if(val !== "None"){
             this.setState({emp: val});
         }
         else{
             this.setState({emp: ''});
         }
 
-        {/* Save the availability from the employee selected to STATE 
-                note: for some reson !== and != did not work for this.*/}
-        if( !(val == '' || val =='None')){
+        /* Save the availability from the employee selected to STATE 
+                note: for some reson !=== and !== did not work for this.*/
+        if( !(val === '' || val ==='None')){
             this.context.employeeData.forEach( employee => {
                 if(employee){
-                    if(employee.emp_name == val){ 
+                    if(employee.emp_name === val){ 
 
                         this.setState({
                             skill: employee.emp_skill,
@@ -148,7 +156,7 @@ class EmployeesPage extends React.Component{
         // database with what we have in state
         this.context.employeeData.forEach(employee => {
             if(employee.id === id){
-                if(employee.emp_name != emp || employee.emp_skill != skill){
+                if(employee.emp_name !== emp || employee.emp_skill !== skill){
                     this.clearAlert();
                     this.patchEmployee(emp, skill, id);
                 }
@@ -182,7 +190,8 @@ class EmployeesPage extends React.Component{
 
         })
         .catch(err => {
-            this.showAlert("Error: Please try again later.")
+            this.showAlert("Error: Please try again later.");
+            this.logout();
         });
     }
 
@@ -208,7 +217,8 @@ class EmployeesPage extends React.Component{
             this.context.updateEmployees();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -223,9 +233,6 @@ class EmployeesPage extends React.Component{
 
         let employees = this.context.employeeData;
         let business = this.context.businessData;
-        let position = this.context.positionData;
-
-
     
         return(
         <div className="page-container crud">
@@ -254,29 +261,29 @@ class EmployeesPage extends React.Component{
 
            {/* FORM */}
             <form className="employee-form" onSubmit={e => this.handleSubmit(e)}>
-
                 <section className="section-form">
-                    <label htmlFor="name">Name:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="text"
-                        className="name-box" 
-                        name="name" 
-                        id="name" 
-                        value={this.state.emp}
-                        onChange={(e) => this.updateName(e.target.value)}
-                    />
+                    <div className="section-form-inner">    
+                        <label htmlFor="name">Name:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="text"
+                            className="name-box" 
+                            name="name" 
+                            id="name" 
+                            value={this.state.emp}
+                            onChange={(e) => this.updateName(e.target.value)}
+                        />
+                    </div>
                 </section>
 
                 {/* skill SELECTION */}
                 <section className="section-form">
-
-                    <label htmlFor="quantity">Skill:</label>
-                    <input type="number" className='quantity-box' name="quantity" id="quantity" 
-                    value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
-                    min="1" max="100"/>
-
-
+                    <div className="section-form-inner">
+                        <label htmlFor="quantity">Skill:</label>
+                        <input type="number" className='quantity-box' name="quantity" id="quantity" 
+                        value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
+                        min="1" max="100"/>
+                    </div>
                 </section>
 
                 <button type='submit' className='submit'>Submit</button>
@@ -297,4 +304,4 @@ class EmployeesPage extends React.Component{
 }
 
 
-export default EmployeesPage;
+export default withRouter(EmployeesPage);

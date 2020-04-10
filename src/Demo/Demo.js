@@ -4,7 +4,6 @@ import { Route, Switch, NavLink } from 'react-router-dom';
 import './Demo.css';
 
 import ViewSchedule from '../ViewSchedule/ViewSchedule';
-import Test from '../test';
 
 import {InfoContext } from '../InfoContext';
 
@@ -57,7 +56,7 @@ class Demo extends React.Component{
 
         this.clearAlert();
 
-        if(val!= "None"){
+        if(val!== "None"){
             let armyTime=0;
 
 
@@ -107,18 +106,18 @@ class Demo extends React.Component{
             </header>
 
              {/* 2) THIS WILL LET YOU SELECT THE DAY OF THE SCHEDULE YOU WANT TO SEE*/}
-             <select className='hours' onChange={(e) => this.updateTime(e.target.value)}>
-                    <option value="None" selected>None</option>
+             <select value={this.state.time} className='hours' onChange={(e) => this.updateTime(e.target.value)}>
+                    <option value={-1}>None</option>
 
-                    {operationHours === undefined? null : operationHours.map(businessDay =>  
+                    {operationHours === undefined? null : operationHours.map (businessDay =>  
                         //iterate through each hour
-                        hours.map(hour =>
+                        hours.map( (hour,id) =>
                             //if hour fits in the hour of operations (can't close the hour the business opens)
                             (hour.id >= parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                 //if the hour is the employees "in time"
                                 //also, if the "out time" for the employee is still defaulted to "0" then it needs to be swapped with the actual close time
                                 
-                                ?<option value={hour.time}>{hour.time}</option>
+                                ?<option key={id} value={hour.time}>{hour.time}</option>
                                 :null
                         )             
                     )}            
@@ -126,8 +125,8 @@ class Demo extends React.Component{
 
            
 
-            {/* 3) THIS COMPONENT WILL DISPLAY THE SCHEDULE*/console.log('TIME: ',this.state.time != -1)}
-            {(this.state.time != -1)
+            {/* 3) THIS COMPONENT WILL DISPLAY THE SCHEDULE*/console.log('TIME: ',this.state.time !== -1)}
+            {(this.state.time !== -1)
                 ?<Switch>
                     <Route exact path='/Demo'
                     render={(routeProps) =>

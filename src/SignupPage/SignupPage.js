@@ -1,14 +1,20 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-
-//import './SignupPage.css';
-
-import TokenService from '../services/token-service'
 //Need this to log in the user after signingup
 import AuthApiService from '../services/auth-api-service'
+import {AltInfoContext } from '../AltInfoContext';
 
 class SignupPage extends React.Component{ 
+
+        /* 
+        ---------------------------------
+        |            CONTEXT            |
+        ---------------------------------
+    */
+   static contextType = AltInfoContext;
+
+
         /* 
             ---------------------------------
             |            STATE              |
@@ -19,7 +25,7 @@ class SignupPage extends React.Component{
         this.state = {
             business_name: '',
             password: '',
-            errorClass:'error hide',
+            errorClass:'message hide',
             errorMessage: '',
         };
     }   
@@ -30,13 +36,13 @@ class SignupPage extends React.Component{
 
     clearError = () => {
         this.setState({
-            errorClass:"error hide"
+            errorClass:"message hide"
         });
     }
 
     showError = (message) => {
         this.setState({
-            errorClass:"error",
+            errorClass:"message",
             errorMessage: message
         });
     }
@@ -47,11 +53,13 @@ class SignupPage extends React.Component{
 
 
         const {business_name, password } = this.state;
+
         AuthApiService.postUser({
             'user_name': business_name,
             'password': password,
         })
         .then( res => {
+            
             //AFTER successfully creating an account, make the call to log in
             AuthApiService.postLogin({
                 business_name: business_name,
@@ -62,16 +70,14 @@ class SignupPage extends React.Component{
 
                 //clear error
                 this.clearError();
-
                 // push to home page now that the user is logged in
                 this.props.pushHome();
-                // force a reload of state so that the home screen can now be displayed
-                window.location.reload(false)
+                // fetch the new info from the database with the new id
+                this.context.fetchDatabase()
     
             })
             .catch(err => {
                 this.showError('An error occurred while creating your account. Please reload the page');
-               // console.log('ebola ',err)
             })
             
         })
@@ -82,8 +88,6 @@ class SignupPage extends React.Component{
             }
             else{
                 this.showError('An error occurred while creating your account. Please reload the page');
-               // console.log('corona ',err)
-
             }
         })
     }
@@ -118,28 +122,35 @@ class SignupPage extends React.Component{
             <form className="user-info-form" onSubmit={e => this.handleSubmit(e)}>
 
                 <section className="section-form">
-                    <label htmlFor="business_name">Business Name:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="text"
-                        className="name-box" 
-                        name="business_name" 
-                        id="business_name" 
-                        value={this.state.business_name}
-                        onChange={(e) => this.updateBusinessName(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+
+                        <label htmlFor="business_name">Business Name:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="text"
+                            className="name-box" 
+                            name="business_name" 
+                            id="business_name" 
+                            value={this.state.business_name}
+                            onChange={(e) => this.updateBusinessName(e.target.value)}
+                        />
+                    </div>
                 </section>
+
                 <section className="section-form">
-                    <label htmlFor="password">Password:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="password"
-                        className="name-box" 
-                        name="password" 
-                        id="password" 
-                        value={this.state.password}
-                        onChange={(e) => this.updatePassword(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+
+                        <label htmlFor="password">Password:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="password"
+                            className="name-box" 
+                            name="password" 
+                            id="password" 
+                            value={this.state.password}
+                            onChange={(e) => this.updatePassword(e.target.value)}
+                        />
+                    </div>
                 </section>
                 
 
@@ -158,4 +169,4 @@ class SignupPage extends React.Component{
 }
 
 
-export default SignupPage;
+export default withRouter(SignupPage);

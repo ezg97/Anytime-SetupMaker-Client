@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 //import './PositionsPage.css';
 
@@ -48,6 +48,12 @@ class PositionsPage extends React.Component{
         |            METHODS            |
         ---------------------------------
     */
+   logout = () => {
+
+    this.context.logout();
+    const { history } = this.props;
+    history.push('/');
+}
 
    clearAlert = () => {
         this.setState({
@@ -57,13 +63,11 @@ class PositionsPage extends React.Component{
 
     showAlert = (message, successClass='') => {
         this.setState({
-            alertClass: "message"+" "+successClass,
+            alertClass: `message ${successClass}`,
             alertMessage: message
         });
 
     }
-
-
 
         /* Handle Selected Employee:
             -- update the state to the current employee selected  */
@@ -71,20 +75,21 @@ class PositionsPage extends React.Component{
 
         this.clearAlert();
 
-        {/* Save the name selected to STATE */}
-        if(val != "None"){
+        /* Save the name selected to STATE */
+        
+        if (val !== "None") {
             this.setState({position: val});
         }
-        else{
+        else {
             this.setState({position: ''});
         }
 
-        {/* Save the skill from the employee selected to STATE 
-                note: for some reson !== and != did not work for this.*/}
-        if( !(val == '' || val =='None')){
+        /* Save the skill from the employee selected to STATE 
+                note: for some reson !=== and !== did not work for this.*/
+        if( !(val === '' || val === 'None')){
             this.context.positionData.forEach( obj => {
                 if(obj){
-                    if(obj.pos_name == val){ 
+                    if(obj.pos_name === val){ 
 
                         this.setState({
                             skill: obj.pos_skill,
@@ -168,7 +173,7 @@ class PositionsPage extends React.Component{
         // database with what we have in state
         this.context.positionData.forEach(obj => {
             if(obj.id === id){
-                if(obj.pos_name != position || obj.pos_skill != skill || obj.pos_importance != importance){
+                if(obj.pos_name !== position || obj.pos_skill !== skill || obj.pos_importance !== importance){
                     console.log('successfully need changing')
                     this.clearAlert();
                     this.patchPosition(position,skill, importance, id);
@@ -205,9 +210,8 @@ class PositionsPage extends React.Component{
             this.showAlert('Successfully Deleted','success');
         })
         .catch(err => {
-            console.log('got an error delete');
-
-            this.showAlert("Error: Please try again later.")
+            this.showAlert("Error: Please try again later.");
+            this.logout();
         });
     }
 
@@ -234,7 +238,8 @@ class PositionsPage extends React.Component{
             this.context.updatePositions();
         })
         .catch(err => {
-            this.showAlert('Error: Please try again later.')
+            this.showAlert('Error: Please try again later.');
+            this.logout();
         });
     }
 
@@ -280,47 +285,49 @@ class PositionsPage extends React.Component{
             <form className="employee-form" onSubmit={e => this.handleSubmit(e)}>
 
                 <section className="section-form">
-                    <label htmlFor="name">Name:</label>
-                    {/* Name INPUT */}
-                    <input 
-                        type="text"
-                        className="name-box" 
-                        name="name" 
-                        id="name" 
-                        value={this.state.position}
-                        onChange={(e) => this.updatePositions(e.target.value)}
-                    />
+                    <div className="section-form-inner">
+                        <label htmlFor="name">Name:</label>
+                        {/* Name INPUT */}
+                        <input 
+                            type="text"
+                            className="name-box" 
+                            name="name" 
+                            id="name" 
+                            value={this.state.position}
+                            onChange={(e) => this.updatePositions(e.target.value)}
+                        />
+                    </div>
                 </section>
 
                 <section className="section-form">
-
-                    <label htmlFor="availability">Importance:</label>
-                    {/* skill SELECTION */}
-                    <select id='availability' onChange={(e) => this.updateImportance(e.target.value)}>
-                     
-                        {position.map(obj => 
-                            /* Have to test the value exists before proceeding*/
-                            (obj.id === this.state.id)
-                                ? levels.map( pos => 
-                                    (pos.id == parseInt(obj.pos_importance))
-                                        ?<option value={obj? obj.pos_importance:null} selected>{obj? obj.pos_importance==1? "Low" :
-                                                                                                     obj.pos_importance==2? "Medium" :
-                                                                                                     obj.pos_importance==3? "High" : null : null}</option>
-                                        :<option value={pos.id}>{pos.level}</option>
-                                 )
-                                :null
-                        )}
-                    </select>
-
+                    <div className="section-form-inner">
+                        <label htmlFor="availability">Importance:</label>
+                        {/* skill SELECTION */}
+                        <select id='availability' onChange={(e) => this.updateImportance(e.target.value)}>
+                        
+                            {position.map(obj => 
+                                /* Have to test the value exists before proceeding*/
+                                (obj.id === this.state.id)
+                                    ? levels.map( pos => 
+                                        (pos.id === parseInt(obj.pos_importance))
+                                            ?<option value={obj? obj.pos_importance:null} selected>{obj? obj.pos_importance===1? "Low" :
+                                                                                                        obj.pos_importance===2? "Medium" :
+                                                                                                        obj.pos_importance===3? "High" : null : null}</option>
+                                            :<option value={pos.id}>{pos.level}</option>
+                                    )
+                                    :null
+                            )}
+                        </select>
+                    </div>
                 </section>
 
                 <section className="section-form">
-
-                    <label htmlFor="quantity">Skill:</label>
-                    <input type="number" className='quantity-box' name="quantity" id="quantity" 
-                    value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
-                    min="1" max="10"/>
-
+                    <div className="section-form-inner">
+                        <label htmlFor="quantity">Skill:</label>
+                        <input type="number" className='quantity-box' name="quantity" id="quantity" 
+                        value={this.state.skill} onChange={(e) => this.updateSkill(e.target.value)}
+                        min="1" max="10"/>
+                    </div>
                 </section>
 
                 <button type='submit' className='submit'>Submit</button>
@@ -341,4 +348,4 @@ class PositionsPage extends React.Component{
 }
 
 
-export default PositionsPage;
+export default withRouter(PositionsPage);
