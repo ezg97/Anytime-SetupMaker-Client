@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "alias": "anytime-setupmaker",
     "name": "anytime-setupmaker",
     "routes": [
         { "handle": "filesystem" },
