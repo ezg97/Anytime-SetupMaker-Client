@@ -77,14 +77,14 @@ class Demo extends React.Component{
         return(
             
 
-        <div className="page-container crud">
+        <div className="page-container display schedule">
              {/* 1) HEADER*/}
             <header className='header'>
                 <h1>Daily Setup.</h1>
             </header>
 
              {/* 2) THIS WILL LET YOU SELECT THE DAY OF THE SCHEDULE YOU WANT TO SEE*/}
-             <select value={this.state.time} className='hours' onChange={(e) => this.updateTime(e.target.value)}>
+             <select value={this.state.time} id='mySelect' onChange={(e) => this.updateTime(e.target.value)}>
                     <option value={-1}>None</option>
 
                     {operationHours === undefined? null : operationHours.map (businessDay =>  

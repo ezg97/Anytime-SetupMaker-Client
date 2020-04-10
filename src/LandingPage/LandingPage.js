@@ -23,9 +23,9 @@ class LandingPage extends React.Component{
 
         else{
             return(
-                <div id='landing-bg' className='page-container'>
+                <div id='landing-bg' className='page-container display'>
                    
-                    <header className='landing header'>
+                    <header className='header landing-header'>
                     
                         <h1>Work made easy</h1>
                     </header>
@@ -62,7 +62,7 @@ class LandingPage extends React.Component{
                                 <h3>Accessibility</h3>
                             </header>
     
-                            <p>You have full, unlimited access, to view the generated schedule
+                            <p>You have full, unlimited access to view the generated schedule
                                 from any device</p>
                         </section>
                     </div>

@@ -1,26 +1,28 @@
 .back{
-    float: left;
-
-    background-color: #383e42; 
+    /* margin top so that the div is UNDER the nav bar */
+    margin-top: 50px; 
+    height: 45px;
     
-    margin-bottom: 35px;
-
+    /* margin-bottom: 35px; */
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 
 .back-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+    width: 26px;
 
     color: white;
-
     background-color: #383e42; 
 
-    text-align: start;
-    padding: 4px;
-    /* to center the back icon */
-    padding-right: 8px; 
-
     font-weight: bold;
-    font-size: 22px;
+    font-size: 22px; 
 }
 
 .back-button:focus, .back-button:hover{
@@ -29,13 +31,30 @@
 }
 
 
-#select-employees{
-    border: 1px solid black;
-    margin: auto 0;
-    color: black;
-    font-size: 14px;
-    padding: 5px;
+.section-select{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
 
+.section-select-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.section-select-inner > #select-employees{
+    margin-top: 25px;
+    font-size: 14px;
+
+    width: 100%;
+    border: 1px solid black;
+    max-width: 150px;
+    padding: 2px;
 }
 
 /*
@@ -86,13 +105,13 @@
  /* ----------
             COMPUTER SCREEN height  
     ----------------------*/
-    @media screen and (min-height: 700px) {
+    /* @media screen and (min-height: 700px) {
       
         .back{
             margin-top: 5%;
         }
   
-    }
+    } */
     
     /* ----------
             COMPUTER SCREEN REGULAR 
@@ -100,13 +119,31 @@
     @media screen and (min-width: 768px) {
       
         .back{
-            padding-top: 30px;
-            margin-bottom: 4%;
+            height: 60px;
+            margin-top: 60px;
         }
         
+        .back-button{
+            height: 50px;
+            width: 30px;
+            /* for some reason "align-items" isn't working so it's not vertically centered so this is a correction for that*/
+            padding-bottom: 4px;
+
+            color: white;
+            background-color: #383e42; 
+        
+            font-weight: bold;
+            font-size: 24px; 
+        }
+
+        .section-select-inner > #select-employees{
+            width: 100%;
+            max-width: 250px;
+            font-size: 20px;
+        }
       
         #select-employees{
-            font-size: 16px;
+            font-size: 18px;
         }
   
     }
@@ -118,8 +155,32 @@
         .back{
             display: none
         }
+
+        .section-select{
+            width: 100%;
+            font-size: 30px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center !important;
+            align-items: center;
+        
+            margin-bottom: 20px;
+        }
+
+        .section-select-inner{
+            width: 90%;
+        }
+
+        .section-select-inner > #select-employees{
+            width: 65%;
+            max-width: 330px;
+            margin-left: 120px;
+
+        }
+
         #select-employees{
-            font-size: 18px;
+            font-size: 22px;
         }        
       
     }

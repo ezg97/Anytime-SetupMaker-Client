@@ -1,3 +1,4 @@
+
 .display-list-positions{
     display: flex;
     flex-direction: row;
@@ -7,8 +8,10 @@
     flex-wrap: wrap;
 
     border-bottom: 1px solid grey;
+    padding-top: 40px;
     padding-bottom: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+
 }
 
 .list-style{
@@ -97,14 +100,11 @@
 }
 
 .emp-name{
-    padding: 5px;
+    min-width: 80px;
 
+    padding: 5px;
     font-size: 18px;
     border: 1px solid black;
-
-    /* border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px; */
-
     background-color: rgb(240,240,240);
 }
 
@@ -152,19 +152,31 @@
 
 /*---------------- RESPONSIVE LAYOUT ----------------*/
 
-
+    @media screen and (min-width: 375px) {
+        
+        .display-list-positions{
+            padding-top: 0px;
+        }
+    }
     /* ----------
             COMPUTER SCREEN REGULAR 
     ----------------------*/
     @media screen and (min-width: 768px) {
+        .display-list-positions{
+            font-size: 22px;
+        }
+
         .scheduler-hours{
-            font-size: 18px;
+            font-size: 20px;
+            min-width: 120px;
         }
 
         .emp-name{
+            min-width: 180px;
             padding: 5px;
         
             font-size: 22px;
+            font-weight: bolder;
         
         }
         
@@ -173,26 +185,39 @@
             COMPUTER SCREEN LARGE 
       ----------------------*/
     @media screen and (min-width: 1024px) {
+        .display-list-positions{
+            padding-top: 40px;
+            font-size: 30px;
+    
+        }
+
         .scheduler-hours{
-            font-size: 20px;
+            font-size: 25px;
+            min-width: 120px;
         }
 
         .emp-name{
+            min-width: 380px;
             padding: 5px;
+            /* not sure why I need important here, I'll figure it out eventually */
+            font-size: 25px !important;
+            font-weight: bolder;
         
-            font-size: 24px;
-            
         }
 
         .shift-text:nth-child(1){
             text-align: center;
             width: 60%;
+            padding-right: 80px;
+
         }
         .shift-text:nth-child(2){
             width: 40%;
-            text-align: start;
-            padding-left: 10px;
+            text-align: center;
+            padding-right: 130px;
         
         }
+
+        
     }
   

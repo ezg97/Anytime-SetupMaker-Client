@@ -8,13 +8,6 @@
 
 }
 
-.hours{
-    padding: 5px;
-    font-size: 14px;
-    width: 250px;
-    cursor: pointer;
-
-}
 
 
 /*---------------- RESPONSIVE LAYOUT ----------------*/
@@ -29,17 +22,12 @@
             font-size: 18px;
 
         }
-        .hours{
-            font-size: 18px;
-        }
-        
+  
     }
       /* ---------------------- 
             COMPUTER SCREEN LARGE 
       ----------------------*/
     @media screen and (min-width: 1024px) {
-        .hours{
-            font-size: 20px;
-        }
+      
     }
   

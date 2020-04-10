@@ -259,20 +259,27 @@ class PositionsPage extends React.Component{
                     then edit or delete the position.</p>
 
             </header>
-            
-            {/* Name selection */}
-            <select id='select-employees' onChange={(e) => this.handleSelectedPosition(e.target.value)}>
-                    <option value="">None</option>
-
-                    {position.map( (obj, id) => 
-                        /* Have to test the value exists before proceeding*/
-                        <option key={id} value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
-                    )}
-
-            </select>
 
            {/* FORM */}
             <form className="employee-form" onSubmit={e => this.handleSubmit(e)}>
+                    
+                <section className="section-form">
+                    <div className="section-form-inner">
+
+                        <label htmlFor="employee">Position:</label>
+                        {/* Name INPUT */}
+                        <select id='select-employees' onChange={(e) => this.handleSelectedPosition(e.target.value)}>
+                                <option value="">None</option>
+
+                                {position.map( (obj, id) => 
+                                    /* Have to test the value exists before proceeding*/
+                                    <option key={id} value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
+                                )}
+
+                        </select>
+
+                    </div>
+                </section>
 
                 <section className="section-form">
                     <div className="section-form-inner">

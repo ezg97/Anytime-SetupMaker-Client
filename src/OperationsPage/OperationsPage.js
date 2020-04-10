@@ -82,7 +82,7 @@ class OperationsPage extends React.Component{
         let business = this.context.businessData;
 
         return(
-        <div className='page-container'>
+        <div className='page-container display'>
                       
             {/* Header */}
             <header className='header' onClick={() => this.clearClick()}>

@@ -32,7 +32,7 @@ class HomePage extends React.Component{
         }
         else{
             return(
-                <div className="page-container">
+                <div className="page-container display">
                               
                     {/* Header */}
                     <header className='header'>
