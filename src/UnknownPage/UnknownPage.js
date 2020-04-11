@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import './UnknownPage.css'
+import './UnknownPage.css';
 
 class UnknownPage extends React.Component{ 
     

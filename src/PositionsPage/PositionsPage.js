@@ -3,8 +3,8 @@ import { withRouter } from 'react-router-dom';
 
 import {InfoContext } from '../InfoContext';
 
-import TokenService from '../services/token-service'
-import config from '../config'
+import TokenService from '../services/token-service';
+import config from '../config';
 
 import levels from '../Levels';
 
@@ -126,7 +126,7 @@ class PositionsPage extends React.Component{
 
         this.setState(
             {skill: val}
-        )
+        );
     }
 
     updateImportance = (val) => {
@@ -134,7 +134,7 @@ class PositionsPage extends React.Component{
 
         this.setState(
             {importance: val}
-        )
+        );
     }
 
 
@@ -147,14 +147,9 @@ class PositionsPage extends React.Component{
         //Verify that this position exists before deleting
         this.context.positionData.forEach(obj => {
             if(obj.id === id){ 
-                this.deletePosition(id);
-                // this.setState({
-                //     position:'',
-                //     skill: '',
-                // });
-                
+                this.deletePosition(id);      
             }
-        })
+        });
     }
 
 
@@ -175,7 +170,7 @@ class PositionsPage extends React.Component{
                     this.showAlert("Error: No changes have been made.");
                 }
             }
-        })
+        });
     }
     
     deletePosition = (id) => {
@@ -191,8 +186,8 @@ class PositionsPage extends React.Component{
 
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             
             
@@ -221,8 +216,8 @@ class PositionsPage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             this.showAlert('Successfully Changed','success');
             this.context.updatePositions();

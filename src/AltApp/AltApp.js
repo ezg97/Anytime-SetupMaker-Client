@@ -1,20 +1,14 @@
 import React from 'react';
-import { Route, NavLink, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import NavBar from '../NavBar/NavBar'
+import NavBar from '../NavBar/NavBar';
 import LandingPage from '../LandingPage/LandingPage';
 
 import LoginPage from '../LoginPage/LoginPage';
 import SignupPage from '../SignupPage/SignupPage';
 import UnknownPage from '../UnknownPage/UnknownPage';
 
-import LoadingPage from '../LoadingPage/LoadingPage';
-
-
-import "./AltApp.css"
-
-
-
+import "./AltApp.css";
 
 class AltApp extends React.Component{ 
 

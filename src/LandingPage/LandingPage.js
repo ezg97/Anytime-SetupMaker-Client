@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import './LandingPage.css';
 import LoadingPage from '../LoadingPage/LoadingPage';
 
-import TokenService from '../services/token-service'
+import TokenService from '../services/token-service';
 
 
 

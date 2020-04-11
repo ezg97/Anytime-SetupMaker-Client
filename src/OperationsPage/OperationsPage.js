@@ -30,19 +30,19 @@ class OperationsPage extends React.Component{
         this.setState({
             position: 'employee',
             positionChildren: 'children hide'
-        })
+        });
 
         if(this.state.employee.includes('hide')){
             this.setState({
                 employee: 'employee',
                 employeeChildren: 'children hide'
-            })
+            });
         }
         else{
             this.setState({
                 employee: 'employee hide',
                 employeeChildren: 'children'
-            })
+            });
         }
     }
 
@@ -50,19 +50,19 @@ class OperationsPage extends React.Component{
         this.setState({
             employee: 'employee',
             employeeChildren: 'children hide'
-        })
+        });
 
         if(this.state.employee.includes('hide')){
             this.setState({
                 position: 'employee',
                 positionChildren: 'children hide'
-            })
+            });
         }
         else{
             this.setState({
                 position: 'employee hide',
                 positionChildren: 'children'
-            })
+            });
         }
     }
 
@@ -70,12 +70,12 @@ class OperationsPage extends React.Component{
         this.setState({
             employee: 'employee',
             employeeChildren: 'children hide'
-        })
+        });
 
         this.setState({
             position: 'employee',
             positionChildren: 'children hide'
-        })
+        });
     }
 
     render(){

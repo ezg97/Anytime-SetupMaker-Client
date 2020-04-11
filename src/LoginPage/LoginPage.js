@@ -68,7 +68,7 @@ class LoginPage extends React.Component {
             else {
                 return res.json().then(err => {
                     throw new Error(err);
-                })
+                });
             }
         })
         .catch(err => {

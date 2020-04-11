@@ -8,8 +8,8 @@ import {InfoContext } from '../InfoContext';
 
 
 //const { employees } = require('../Employees');
-import TokenService from '../services/token-service'
-import config from '../config'
+import TokenService from '../services/token-service';
+import config from '../config';
 
 const { hoursPM, hoursAM } = require('../Hours');
 
@@ -77,7 +77,7 @@ class SchedulePage extends React.Component{
 
     positionButtonClicked = (pos_id, list_index, e) => {
         e.stopPropagation();
-        let className = e.target.className
+        let className = e.target.className;
         if(className.includes('clicked') ){
             e.currentTarget.className = `pos-requirement-button ${list_index}`;
 
@@ -96,7 +96,7 @@ class SchedulePage extends React.Component{
 
         e.stopPropagation();
 
-        let className = e.target.className
+        let className = e.target.className;
 
         if(className.includes('clicked') ){
 
@@ -192,8 +192,8 @@ class SchedulePage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             // this.showAlert('Successfully Changed','success');
             this.context.updateEmployees();
@@ -220,10 +220,9 @@ class SchedulePage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
-            // this.showAlert('Successfully Changed','success');
             this.context.updateEmployees();
         })
         .catch(err => {
@@ -250,7 +249,6 @@ class SchedulePage extends React.Component{
                     throw new Error(err.status)
                 })
             }
-            // this.showAlert('Successfully Changed','success');
             this.context.updateEmployees();
         })
         .catch(err => {
@@ -275,8 +273,8 @@ class SchedulePage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             // this.showAlert('Successfully Changed','success');
             this.context.updatePositions();
@@ -311,10 +309,10 @@ class SchedulePage extends React.Component{
 
                 emps = this.context.employeeData.map(emp => {
                     if (parseInt(emp.out_time) === 0) {
-                        return [emp.in_time, parseInt(this.context.dayData[0].close_time)]
+                        return [emp.in_time, parseInt(this.context.dayData[0].close_time)];
                     }
                     else{
-                        return [emp.in_time, emp.out_time]
+                        return [emp.in_time, emp.out_time];
                     }
                 });
             }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 
-import TokenService from '../services/token-service'
+import TokenService from '../services/token-service';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import {InfoContext } from '../InfoContext';
 

@@ -59,12 +59,12 @@ class Demo extends React.Component{
         if (parseInt(val) !== -1) {
             this.setState({
                 time: parseInt(val)
-            })
+            });
         }
         else{
             this.setState({
                 time: -1
-            })
+            });
         }
         
     }

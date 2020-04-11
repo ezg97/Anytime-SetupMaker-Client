@@ -4,9 +4,9 @@ import { withRouter } from 'react-router-dom';
 import './AddEmployeesPage.css';
 
 import {InfoContext } from '../InfoContext';
-import config from '../config'
+import config from '../config';
 
-import TokenService from '../services/token-service'
+import TokenService from '../services/token-service';
 
 
 class AddEmployeesPage extends React.Component{ 
@@ -95,7 +95,7 @@ class AddEmployeesPage extends React.Component{
     updateSkill = (val) => {
         this.setState(
             {skill: val}
-        )
+        );
     }
 
 
@@ -151,7 +151,7 @@ class AddEmployeesPage extends React.Component{
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status)
-                })
+                });
             }
             //show the user this action was successful
             this.showAlert('Successfully Added','success');
@@ -188,7 +188,7 @@ class AddEmployeesPage extends React.Component{
             {/* Header */}
             <header className='header'>
                 <h1>{business.length>0? business[0].business_name:null}</h1>
-                <p>Enter the full name and the overall sill (1-100) of a new employee.</p>
+                <p>Enter the full name and the overall skill (1-100) of a new employee.</p>
        
 
             </header>

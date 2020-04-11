@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {Route, Switch} from 'react-router-dom';
 
-import './App.css'
+import './App.css';
 
 import InfoContext from '../InfoContext';
 import AltInfoContext from '../AltInfoContext';
 
 import LandingPage from '../LandingPage/LandingPage';
 import Demo from '../Demo/Demo';
-import NavBar from '../NavBar/NavBar'
+import NavBar from '../NavBar/NavBar';
 import HomePage from '../HomePage/HomePage';
 import OperationsPage from '../OperationsPage/OperationsPage';
 import EmployeesPage from '../EmployeesPage/EmployeesPage';
@@ -17,17 +17,17 @@ import AddPositionsPage from '../AddPositionsPage/AddPositionsPage';
 import PositionsPage from '../PositionsPage/PositionsPage';
 
 import HoursPage from '../HoursPage/HoursPage';
-import SchedulePage from '../SchedulePage/SchedulePage'
+import SchedulePage from '../SchedulePage/SchedulePage';
 import UnknownPage from '../UnknownPage/UnknownPage';
 
 import LoginPage from '../LoginPage/LoginPage';
 import SignupPage from '../SignupPage/SignupPage';
 
 
-import TokenService from '../services/token-service'
-import config from '../config'
+import TokenService from '../services/token-service';
+import config from '../config';
 
-import AuthApiService from '../services/auth-api-service'
+import AuthApiService from '../services/auth-api-service';
 
 class App extends Component {
   
@@ -105,16 +105,16 @@ class App extends Component {
   componentWillUnmount() {
 
     /* remove the token from localStorage */
-    TokenService.clearAuthToken()
+    TokenService.clearAuthToken();
     /*
       and remove the refresh endpoint request
     */
-    TokenService.clearCallbackBeforeExpiry()
+    TokenService.clearCallbackBeforeExpiry();
   }
 
   logout = () => {
        
-      TokenService.clearAuthToken()
+      TokenService.clearAuthToken();
       /* when logging out, clear the callbacks to the refresh api and idle auto logout */
       TokenService.clearCallbackBeforeExpiry();
       this.clearState();

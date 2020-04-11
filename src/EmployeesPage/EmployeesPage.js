@@ -1,8 +1,8 @@
 import React from 'react';
 import './EmployeesPage.css';
 import {InfoContext } from '../InfoContext';
-import TokenService from '../services/token-service'
-import config from '../config'
+import TokenService from '../services/token-service';
+import config from '../config';
 import { withRouter } from 'react-router-dom';
 
 
@@ -123,7 +123,7 @@ class EmployeesPage extends React.Component{
 
         this.setState(
             {skill: val}
-        )
+        );
     }
 
 
@@ -136,12 +136,7 @@ class EmployeesPage extends React.Component{
         //Verify that this employee exists before deleting
         this.context.employeeData.forEach(employee => {
             if(employee.id === id){ 
-                this.deleteEmployee(id);
-                // this.setState({
-                //     emp:'',
-                //     availability: '',
-                // });
-                
+                this.deleteEmployee(id);                
             }
         })
     }
@@ -179,8 +174,8 @@ class EmployeesPage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
 
             this.context.updateEmployees();

@@ -5,8 +5,8 @@ import './HoursPage.css';
 
 import {InfoContext } from '../InfoContext';
 
-import TokenService from '../services/token-service'
-import config from '../config'
+import TokenService from '../services/token-service';
+import config from '../config';
 
 
 const { hoursPM, hoursAM } = require('../Hours');
@@ -144,8 +144,8 @@ class HoursPage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             this.showAlert('Successfully Updated','success');
             this.context.updateBusinessDay();
@@ -171,8 +171,8 @@ class HoursPage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             this.showAlert('Successfully Updated','success');
             this.context.updateBusinessDay();

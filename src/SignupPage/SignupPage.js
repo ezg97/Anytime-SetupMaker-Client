@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 //Need this to log in the user after signingup
-import AuthApiService from '../services/auth-api-service'
+import AuthApiService from '../services/auth-api-service';
 import {AltInfoContext } from '../AltInfoContext';
 
 class SignupPage extends React.Component{ 
@@ -73,7 +73,7 @@ class SignupPage extends React.Component{
                 // push to home page now that the user is logged in
                 this.props.pushHome();
                 // fetch the new info from the database with the new id
-                this.context.fetchDatabase()
+                this.context.fetchDatabase();
     
             })
             .catch(err => {
