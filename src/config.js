@@ -5,4 +5,4 @@ export default {
     // URL: 'http://localhost:8000',
     TOKEN_KEY: 'blogful-client-auth-token',
     ID: 'client_id',
-  }
+  };
