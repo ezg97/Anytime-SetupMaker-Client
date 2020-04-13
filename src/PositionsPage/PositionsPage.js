@@ -1,16 +1,10 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
-import {InfoContext } from '../InfoContext';
-
+import {withRouter} from 'react-router-dom';
+import {InfoContext} from '../InfoContext';
 import TokenService from '../services/token-service';
 import config from '../config';
-
 import levels from '../Levels';
-
 class PositionsPage extends React.Component{ 
-
-
     /* 
         ---------------------------------
         |            STATE              |
@@ -28,7 +22,6 @@ class PositionsPage extends React.Component{
         };
     }
     
-
     /* 
         ---------------------------------
         |            CONTEXT            |
@@ -36,18 +29,16 @@ class PositionsPage extends React.Component{
     */
     static contextType = InfoContext;
 
-
     /* 
         ---------------------------------
         |            METHODS            |
         ---------------------------------
     */
    logout = () => {
-
-    this.context.logout();
-    const { history } = this.props;
-    history.push('/');
-}
+        this.context.logout();
+        const {history} = this.props;
+        history.push('/');
+    }
 
    clearAlert = () => {
         this.setState({
@@ -60,17 +51,13 @@ class PositionsPage extends React.Component{
             alertClass: `message ${successClass}`,
             alertMessage: message
         });
-
     }
 
         /* Handle Selected Employee:
             -- update the state to the current employee selected  */
     handleSelectedPosition = (val) => {
-
         this.clearAlert();
-
-        /* Save the name selected to STATE */
-        
+        /* Save the name selected to STATE */ 
         if (val !== "") {
             this.setState({position: val});
         }
@@ -116,14 +103,12 @@ class PositionsPage extends React.Component{
             {position: val}
         );
     }
-
         /* 
             Update skill:
             -- update the state to the current position skill SELECTED in the OPTION BOX 
         */
     updateSkill = (val) => {
         this.clearAlert();
-
         this.setState(
             {skill: val}
         );
@@ -131,7 +116,6 @@ class PositionsPage extends React.Component{
 
     updateImportance = (val) => {
         this.clearAlert();
-
         this.setState(
             {importance: val}
         );
@@ -139,11 +123,8 @@ class PositionsPage extends React.Component{
 
 
     handleDelete = () => {
-
         this.clearAlert();
-
         const {id } = this.state;
-
         //Verify that this position exists before deleting
         this.context.positionData.forEach(obj => {
             if(obj.id === id){ 
@@ -152,12 +133,9 @@ class PositionsPage extends React.Component{
         });
     }
 
-
     handleSubmit = (event) => {
         event.preventDefault();
-
         const {position, skill, importance, id } = this.state;
-
         //Verify if ANY edits have been made to the position by comparing what's in the 
         // database with what we have in state
         this.context.positionData.forEach(obj => {
@@ -183,14 +161,11 @@ class PositionsPage extends React.Component{
             }
         })
         .then(res => {
-
             if( !res.ok ){
                 return res.json().then(err => {
                     throw new Error(err.status);
                 });
             }
-            
-            
             this.context.updatePositions();
             this.handleSelectedPosition('');
             this.showAlert('Successfully Deleted','success');
@@ -209,9 +184,7 @@ class PositionsPage extends React.Component{
                 'table':'position',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
-            body: JSON.stringify( 
-                { pos_name: name, pos_skill: skill, pos_importance: importance }
-            )
+            body: JSON.stringify({pos_name: name, pos_skill: skill, pos_importance: importance})
         })
         .then(res => {
             if( !res.ok ){
@@ -227,8 +200,6 @@ class PositionsPage extends React.Component{
             this.logout();
         });
     }
-
-
    
     /* 
         ---------------------------------
@@ -236,11 +207,8 @@ class PositionsPage extends React.Component{
         ---------------------------------
     */
     render(){
-
         let position = this.context.positionData;
         let business = this.context.businessData;
-
-    
         return(
         <div className="page-container crud">
             <div className='back'>
@@ -266,7 +234,7 @@ class PositionsPage extends React.Component{
                         <select id='select-employees' onChange={(e) => this.handleSelectedPosition(e.target.value)}>
                                 <option value="">None</option>
 
-                                {position.map( (obj, id) => 
+                                {position.map((obj, id) => 
                                     /* Have to test the value exists before proceeding*/
                                     <option key={id} value={obj? obj.pos_name:null}>{obj? obj.pos_name:null}</option>
                                 )}
@@ -300,7 +268,7 @@ class PositionsPage extends React.Component{
                             {position.map( obj => 
                                 /* Have to test the value exists before proceeding*/
                                 (obj.id === this.state.id)
-                                    ? levels.map( (pos, id) => 
+                                    ? levels.map((pos, id) => 
                                         (pos.id === parseInt(obj.pos_importance))
                                             ?<option key={id} value={obj? obj.pos_importance:null}>{obj? obj.pos_importance===1? "Low" :
                                                                                                         obj.pos_importance===2? "Medium" :
@@ -328,12 +296,7 @@ class PositionsPage extends React.Component{
                 <section className={this.state.alertClass}>
                     <p>{this.state.alertMessage}</p>
                 </section>
-
-            </form>
-                
-                
-
-          
+            </form> 
         </div>
         );
     }

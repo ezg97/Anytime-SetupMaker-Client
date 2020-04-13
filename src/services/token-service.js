@@ -42,18 +42,16 @@ const TokenService = {
   },
   queueCallbackBeforeExpiry(callback) {
     /* get the number of ms from now until the token expires */
-    const msUntilExpiry = TokenService._getMsUntilExpiry(
-      TokenService.readJwtToken()
-    )
+    const msUntilExpiry = TokenService._getMsUntilExpiry(TokenService.readJwtToken());
     /*
       queue a callback that will happen 10 seconds before the token expires
       the callback is passed in as an argument so could be anything,
         in this app, the callback is for calling the refresh endpoint
     */
-    _timeoutId = setTimeout(callback, msUntilExpiry - _TEN_SECONDS_IN_MS)
+    _timeoutId = setTimeout(callback, msUntilExpiry - _TEN_SECONDS_IN_MS);
   },
   clearCallbackBeforeExpiry() {
-    clearTimeout(_timeoutId)
+    clearTimeout(_timeoutId);
   },
 }
 

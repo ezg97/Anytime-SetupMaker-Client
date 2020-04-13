@@ -18,8 +18,8 @@ export function setupAlgo(employees, position, operationHours) {
 
         // Sort the positions in importance (most to least important) AND
         // Sort the employees in skill (most to least skill)
-        reqPos.sort( (a,b) => ( b.pos_importance - a.pos_importance && b.pos_skill - a.pos_skill ));
-        reqEmp.sort( (a,b) => ( b.emp_skill - a.emp_skill));
+        reqPos.sort((a,b) => ( b.pos_importance - a.pos_importance && b.pos_skill - a.pos_skill ));
+        reqEmp.sort((a,b) => ( b.emp_skill - a.emp_skill));
 
         for (let i = parseInt(operationHours[0].open_time); i < parseInt(operationHours[0].close_time); i++) {
             
@@ -31,7 +31,7 @@ export function setupAlgo(employees, position, operationHours) {
             // - 3) if the "in time" wasn't set (default at 0 aka begging of hour of operations), but the "out time" was
             // - 4) if the "in time" was set, but the "out time" wasn't (default at 0 aka end of hour of operations)
             tempEmpList = tempEmpList.filter(obj => {
-                if ( (i >= parseInt(obj.in_time) && i < parseInt(obj.out_time)) || (parseInt(obj.in_time)===0 && parseInt(obj.out_time) === 0) || 
+                if ((i >= parseInt(obj.in_time) && i < parseInt(obj.out_time)) || (parseInt(obj.in_time)===0 && parseInt(obj.out_time) === 0) || 
                      (parseInt(obj.in_time) === 0 && i < parseInt(obj.out_time)) || (i >= parseInt(obj.in_time) && parseInt(obj.out_time) === 0) )
                 {
                     return true;

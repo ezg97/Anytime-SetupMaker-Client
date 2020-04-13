@@ -1,20 +1,14 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
-//Need this to log in the user after signingup
+import {withRouter} from 'react-router-dom';
 import AuthApiService from '../services/auth-api-service';
 import {AltInfoContext } from '../AltInfoContext';
-
 class SignupPage extends React.Component{ 
-
         /* 
         ---------------------------------
         |            CONTEXT            |
         ---------------------------------
     */
    static contextType = AltInfoContext;
-
-
         /* 
             ---------------------------------
             |            STATE              |
@@ -30,10 +24,7 @@ class SignupPage extends React.Component{
         };
     }   
 
-
-
     //ERROR HANDLING
-
     clearError = () => {
         this.setState({
             errorClass:"message hide"
@@ -47,19 +38,14 @@ class SignupPage extends React.Component{
         });
     }
 
-
     handleSubmit = (event) => {
         event.preventDefault();
-
-
         const {business_name, password } = this.state;
-
         AuthApiService.postUser({
             'user_name': business_name,
             'password': password,
         })
         .then( res => {
-            
             //AFTER successfully creating an account, make the call to log in
             AuthApiService.postLogin({
                 business_name: business_name,
@@ -67,7 +53,6 @@ class SignupPage extends React.Component{
             })
             .then( res => {
                 //user is signed up now
-
                 //clear error
                 this.clearError();
                 // push to home page now that the user is logged in
@@ -78,8 +63,7 @@ class SignupPage extends React.Component{
             })
             .catch(err => {
                 this.showError('An error occurred while creating your account. Please reload the page');
-            })
-            
+            })  
         })
         .catch(err => {
             //For example: when there no tables have been created, the error returned is an object, not a string
@@ -89,7 +73,7 @@ class SignupPage extends React.Component{
             else{
                 this.showError('An error occurred while creating your account. Please reload the page');
             }
-        })
+        });
     }
 
     updateBusinessName = (val) => {
@@ -105,11 +89,7 @@ class SignupPage extends React.Component{
     }
 
     render(){
-
-        
-
-        return(
-            
+        return(       
         <div className="page-container">
             <div className='alt-back'>
                 <button className="alt-back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>
@@ -153,7 +133,6 @@ class SignupPage extends React.Component{
                     </div>
                 </section>
                 
-
                 <button type='submit' className='submit'>Submit</button>
 
                 <section className={this.state.errorClass}>
@@ -161,8 +140,7 @@ class SignupPage extends React.Component{
                 </section>
 
             </form>
-
-            
+      
         </div>
         );
     }

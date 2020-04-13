@@ -1,14 +1,9 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
+import {withRouter} from 'react-router-dom';
 import './AddEmployeesPage.css';
-
-import {InfoContext } from '../InfoContext';
+import {InfoContext} from '../InfoContext';
 import config from '../config';
-
 import TokenService from '../services/token-service';
-
-
 class AddEmployeesPage extends React.Component{ 
 
 
@@ -47,7 +42,7 @@ class AddEmployeesPage extends React.Component{
    logout = () => {
 
         this.context.logout();
-        const { history } = this.props;
+        const {history} = this.props;
         history.push('/');
     }
 
@@ -60,7 +55,7 @@ class AddEmployeesPage extends React.Component{
     showAlert = (message, successClass='') => {
         this.setState({
             alertClass: `message ${successClass}`,
-            alertMessage: message
+            alertMessage: message,
         });
     }
 
@@ -76,12 +71,11 @@ class AddEmployeesPage extends React.Component{
                 this.updateEmployeeExists(true);
                 matched = true;
                 this.showAlert('Error: This Employee already exists.');
-                
             }
         });
 
         if(matched === false){
-            this.clearAlert()
+            this.clearAlert();
             this.updateEmployeeExists(false);
         }
        
@@ -116,7 +110,6 @@ class AddEmployeesPage extends React.Component{
 
     handleSubmit = (event) => {
         event.preventDefault();
-
         const {emp, skill } = this.state;
         if(emp!==""){
             if(this.state.employeeExists === false){
@@ -150,7 +143,7 @@ class AddEmployeesPage extends React.Component{
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
+                    throw new Error(err.status);
                 });
             }
             //show the user this action was successful
@@ -158,7 +151,6 @@ class AddEmployeesPage extends React.Component{
             //reset the "does user exist" boolean to true, since the user now exists since it was just added
             // or else subsequent submit clicks will create a duplicate user
             this.updateEmployeeExists(true);
-
             //now that an employee has been added to the database, make a new call to get all the employees again
             this.context.updateEmployees();
         })

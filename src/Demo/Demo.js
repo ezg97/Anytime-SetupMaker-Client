@@ -1,18 +1,10 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-
+import {Route, Switch } from 'react-router-dom';
 import './Demo.css';
-
 import ViewSchedule from '../ViewSchedule/ViewSchedule';
-
-import {InfoContext } from '../InfoContext';
-
-
+import {InfoContext} from '../InfoContext';
 const { hours } = require('../Hours');
-
-
 class Demo extends React.Component{ 
-    
     constructor(props){
         super(props);
         this.state = {
@@ -29,8 +21,6 @@ class Demo extends React.Component{
     */
     static contextType = InfoContext;
 
-
-    
     /* 
         ---------------------------------
         |            METHODS            |
@@ -53,9 +43,7 @@ class Demo extends React.Component{
 
 
     updateTime = (val) => {
-
         this.clearAlert();
-
         if (parseInt(val) !== -1) {
             this.setState({
                 time: parseInt(val)
@@ -65,18 +53,13 @@ class Demo extends React.Component{
             this.setState({
                 time: -1
             });
-        }
-        
+        }    
     }
       
- 
     render(){
-
         let operationHours = this.context.dayData;
         
         return(
-            
-
         <div className="page-container display schedule">
              {/* 1) HEADER*/}
             <header className='header'>
@@ -89,7 +72,7 @@ class Demo extends React.Component{
 
                     {operationHours === undefined? null : operationHours.map (businessDay =>  
                         //iterate through each hour
-                        hours.map( (hour,id) =>
+                        hours.map((hour,id) =>
                             //if hour fits in the hour of operations (can't close the hour the business opens)
                             (hour.id >= parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                 //if the hour is the employees "in time"
@@ -99,8 +82,6 @@ class Demo extends React.Component{
                         )             
                     )}            
                 </select>
-
-           
 
             {/* 3) THIS COMPONENT WILL DISPLAY THE SCHEDULE*/}
             {(this.state.time !== -1)
@@ -121,9 +102,7 @@ class Demo extends React.Component{
                         />
                     } />
                 </Switch>
-            }
-          
-            
+            }  
         </div>
         );
     }

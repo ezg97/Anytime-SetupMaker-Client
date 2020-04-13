@@ -1,10 +1,7 @@
 import React from 'react';
-import { withRouter, NavLink } from 'react-router-dom';
-
+import {withRouter, NavLink } from 'react-router-dom';
 import './NavBar.css';
-
-import {InfoContext } from '../InfoContext';
-
+import {InfoContext} from '../InfoContext';
 class NavBar extends React.Component{ 
   
    static contextType = InfoContext;
@@ -12,17 +9,13 @@ class NavBar extends React.Component{
 
     logout = () => {
         this.context.logout();
-        const { history } = this.props;
+        const {history} = this.props;
         history.push('/');
-
     }
     
     render(){
-
         let bool = this.props.bool;
-
         return(
-            
         <nav className="app_nav">
             {(bool === 'false')
 

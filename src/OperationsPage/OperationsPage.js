@@ -1,8 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import {InfoContext } from '../InfoContext';
+import {NavLink} from 'react-router-dom';
+import {InfoContext} from '../InfoContext';
 import './OperationsPage.css';
-
 class OperationsPage extends React.Component{ 
     /* 
         ---------------------------------
@@ -31,7 +30,6 @@ class OperationsPage extends React.Component{
             position: 'employee',
             positionChildren: 'children hide'
         });
-
         if(this.state.employee.includes('hide')){
             this.setState({
                 employee: 'employee',
@@ -51,7 +49,6 @@ class OperationsPage extends React.Component{
             employee: 'employee',
             employeeChildren: 'children hide'
         });
-
         if(this.state.employee.includes('hide')){
             this.setState({
                 position: 'employee',
@@ -71,7 +68,6 @@ class OperationsPage extends React.Component{
             employee: 'employee',
             employeeChildren: 'children hide'
         });
-
         this.setState({
             position: 'employee',
             positionChildren: 'children hide'
@@ -80,7 +76,6 @@ class OperationsPage extends React.Component{
 
     render(){
         let business = this.context.businessData;
-
         return(
         <div className='page-container display'>
                       

@@ -39,21 +39,9 @@ class App extends Component {
       employees: [],
       position: [],
       fetched: 'not updated',
-      requests: [
-                {   
-                    url:`${config.URL}/business/${TokenService.getId()}`,
-                    table:'operation',
-                },
-
-                {   
-                    url:`${config.URL}/business/${TokenService.getId()}`,
-                    table:'employee',
-                },
-                {   
-                  url:`${config.URL}/business/${TokenService.getId()}`,
-                  table:'position',
-              },
-      ],
+      requests: [{url:`${config.URL}/business/${TokenService.getId()}`, table:'operation'},
+                {url:`${config.URL}/business/${TokenService.getId()}`, table:'employee'},
+                {url:`${config.URL}/business/${TokenService.getId()}`, table:'position'}]
     };
   }
 
@@ -67,26 +55,19 @@ class App extends Component {
 
 
   checkFetch = () => {
-    return new Promise( (resolve,reject) => {
-
+    return new Promise((resolve,reject) => {
         //gotta set this timeout for a second or else
         // the promise will be executed before the fetch
         //completes, thus, the below condition will always be false
         setTimeout(() => {
-
             if(this.state.fetched === true){
               resolve(true);
             }
-
         }, 1000);
       });
-
   }
 
   componentDidMount() {
-
-
-
     /* if a user is logged in */
     if (TokenService.hasAuthToken()) {
         /*
@@ -94,16 +75,14 @@ class App extends Component {
           and queue a timeout just before the token expires
         */
         this.fetchDatabase();
-
         TokenService.queueCallbackBeforeExpiry(() => {
             /* the timoue will call this callback just before the token expires */
-            AuthApiService.postRefreshToken()
+            AuthApiService.postRefreshToken();
         });
     }
   }
 
   componentWillUnmount() {
-
     /* remove the token from localStorage */
     TokenService.clearAuthToken();
     /*
@@ -113,7 +92,6 @@ class App extends Component {
   }
 
   logout = () => {
-       
       TokenService.clearAuthToken();
       /* when logging out, clear the callbacks to the refresh api and idle auto logout */
       TokenService.clearCallbackBeforeExpiry();
@@ -134,49 +112,28 @@ class App extends Component {
   fetchDatabase = () => {
     //first update the requests
     this.updateRequests();
-
     Promise.all(this.state.requests.map(request =>
-        fetch(request.url,
-          {   
-              headers: {  
-                          'table':request.table,
-                          'Authorization':`bearer ${TokenService.getAuthToken()}`
-                      }
-          }
-        )
+        fetch(request.url, {headers: {'table':request.table, 'Authorization':`bearer ${TokenService.getAuthToken()}`}})
         .then(data => {
           if (!data.ok){
-            throw new Error(data.status)
+            throw new Error(data.status);
           }
-
           return data.json();
         })
-
       ))
-      .then( ([hours, employees, position]) => {
-
-            let business = fetch(`${config.URL}/${TokenService.getId()}`,
-            {
-                headers: {
-                    'table':'business',
-                    'Authorization':`bearer ${TokenService.getAuthToken()}`
-                }
-            })
-            .then(data => {
-              if (!data.ok){
-                return data.json().then(e => Promise.reject(e));
-              }
-
-              return data.json();
-            });
-
-         
-            return Promise.all([business, hours, employees, position]);
+      .then(([hours, employees, position]) => {
+        let business = fetch(`${config.URL}/${TokenService.getId()}`, {headers: {'table':'business', 'Authorization':`bearer ${TokenService.getAuthToken()}`}})
+        .then(data => {
+          if (!data.ok){
+            return data.json().then(e => Promise.reject(e));
+          }
+          return data.json();
+        });
+        return Promise.all([business, hours, employees, position]);
       })
-      .then( ([business, hours, employees, position]) => {  
-            //fetch has been completed and the state has been updated so set "fetched" to true
-        
-            this.setState({business, hours, employees, position, fetched: true});
+      .then(([business, hours, employees, position]) => {  
+        //fetch has been completed and the state has been updated so set "fetched" to true
+        this.setState({business, hours, employees, position, fetched: true});
       })
       .catch(error => {
           this.logout();
@@ -187,103 +144,64 @@ class App extends Component {
     //update the requests with the current id, since it's only initialized when the page is loaded.
     updateRequests = () => {
       this.setState({
-        requests: [
-            {   
-                url:`${config.URL}/business/${TokenService.getId()}`,
-                table:'operation',
-            },
-
-            {   
-                url:`${config.URL}/business/${TokenService.getId()}`,
-                table:'employee',
-            },
-            {   
-              url:`${config.URL}/business/${TokenService.getId()}`,
-              table:'position',
-          },
-        ],
+        requests: [{url:`${config.URL}/business/${TokenService.getId()}`, table:'operation'},
+                  {url:`${config.URL}/business/${TokenService.getId()}`, table:'employee'},
+                  {url:`${config.URL}/business/${TokenService.getId()}`, table:'position'}],
       });
     }
       
   updateEmployees = () => {
     fetch(`${config.URL}/business/${TokenService.getId()}`,
-        {
-            headers: {
-                'table':'employee',
-                'Authorization':`bearer ${TokenService.getAuthToken()}`
-
-            }
-        })
-        .then( (employees) => {
-          
-          if (!employees.ok) {
-              return employees.json().then(e => Promise.reject(e));
-          }
-          
-          return employees.json();
-      })
-      .then( (employees) => {
-          this.setState({employees});
-      })
-      .catch(error => {
-        this.logout();
-      });
-
+        {headers: {'table':'employee', 'Authorization':`bearer ${TokenService.getAuthToken()}`}
+    })
+    .then((employees) => {
+      if (!employees.ok) {
+        return employees.json().then(e => Promise.reject(e));
+      }
+      return employees.json();
+    })
+    .then((employees) => {
+      this.setState({employees});
+    })
+    .catch(error => {
+      this.logout();
+    });
   }
 
   updatePositions = () => {
-    fetch(`${config.URL}/business/${TokenService.getId()}`,
-        {
-            headers: {
-                'table':'position',
-                'Authorization':`bearer ${TokenService.getAuthToken()}`
-            }
-        })
-        .then( (position) => {
-          if (!position.ok){
-              return position.json().then(e => Promise.reject(e));
-          }
-          
-
-          return position.json();
-      })
-      .then( (position) => {
-          this.setState({position});
-      })
-      .catch(error => {
-        this.logout();
-      });
-
+    fetch(`${config.URL}/business/${TokenService.getId()}`, {headers: {'table':'position', 'Authorization':`bearer ${TokenService.getAuthToken()}`}})
+    .then((position) => {
+      if (!position.ok){
+        return position.json().then(e => Promise.reject(e));
+      }
+      return position.json();
+    })
+    .then((position) => {
+      this.setState({position});
+    })
+    .catch(error => {
+      this.logout();
+    });
   }
 
   updateBusinessDay = () => {
-    fetch(`${config.URL}/business/${TokenService.getId()}`,
-        {
-            headers: {
-                'table':'operation',
-                'Authorization':`bearer ${TokenService.getAuthToken()}`
-
-            }
-        })
-        .then( (hours) => {
+    fetch(`${config.URL}/business/${TokenService.getId()}`, {headers: {'table':'operation', 'Authorization':`bearer ${TokenService.getAuthToken()}`}})
+    .then((hours) => {      
+      if (!hours.ok)
+        return hours.json().then(e => Promise.reject(e));
           
-          if (!hours.ok)
-              return hours.json().then(e => Promise.reject(e));
-          
-
-          return hours.json();
-      })
-      .then( (hours) => {
-          this.setState({hours});
-      })
-      .catch(error => {
-        this.logout();
-      }); 
+      return hours.json();
+    })
+    .then((hours) => {
+      this.setState({hours});
+    })
+    .catch(error => {
+      this.logout();
+    }); 
   }
 
   //render
   render(){
-    
     if (TokenService.hasAuthToken()) {
       return (
         <InfoContext.Provider value={{businessData: this.state.business,
@@ -312,74 +230,59 @@ class App extends Component {
                     />
                   }
                 />
-
             </Switch>
 
             <main role="main">
-
               {/* MAIN TEXT SECTION */}
               <Switch>
                 <Route exact path='/' component={HomePage} />
-
                 <Route exact path='/demo' component={Demo} />
-
                 <Route exact path='/home' component={HomePage} />
-
                 <Route exact path='/operations' 
                   render={(routeProps) =>
                     <OperationsPage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
-                  />
-
+                 />
                 <Route exact path='/employees' 
                   render={(routeProps) =>
                     <EmployeesPage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
-                  />
-
+                />
                 <Route exact path='/addEmployees' 
                   render={(routeProps) =>
                     <AddEmployeesPage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
-                  />
-
-              <Route exact path='/positions' 
-                  render={(routeProps) =>
-                    <PositionsPage
-                      onClickBack={() =>routeProps.history.goBack()} 
-                    />}
-                  />    
-
+                />
+                <Route exact path='/positions' 
+                    render={(routeProps) =>
+                      <PositionsPage
+                        onClickBack={() =>routeProps.history.goBack()} 
+                      />}
+                />    
                 <Route exact path='/addPositions' 
                   render={(routeProps) =>
                     <AddPositionsPage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
                   />
-
                 <Route exact path='/hours' 
                   render={(routeProps) =>
                     <HoursPage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
                   />
-
                 <Route exact path='/schedule' 
                   render={(routeProps) =>
                     <SchedulePage
                       onClickBack={() =>routeProps.history.goBack()} 
                     />}
-                  />
-              
-              <Route path='/' component={UnknownPage} />
-                
+                  /> 
+                <Route path='/' component={UnknownPage} />   
               </Switch>
-
             </main>
-
           </div>
       </InfoContext.Provider>
       );
@@ -389,9 +292,6 @@ class App extends Component {
         <AltInfoContext.Provider value={{
           fetchDatabase: this.fetchDatabase}}>
           <div className="container">
-
-          
-
               {/* LANDING PAGE */}
               <Route exact path='/'
                   render={(routeProps) =>
@@ -401,37 +301,30 @@ class App extends Component {
                   }
               />
               <main role="main">
-
-                  {/* MAIN TEXT SECTION */}
-                  <Switch>
-                      <Route exact path='/' 
-                          render={(routeProps) =>
-                              <LandingPage
-                                  LoggingInBool={false} 
-                              />
-                          }
-                      />
-                  
-                  <Route exact path='/login' 
-                  render={(routeProps) =>
-                    <LoginPage
-                      onClickBack={() =>routeProps.history.goBack()} 
-                      pushHome={() => routeProps.history.push('/')}
-                    />}
-                  />
-
-                  <Route exact path='/signup' 
-                  render={(routeProps) =>
-                    <SignupPage
-                      onClickBack={() =>routeProps.history.goBack()} 
-                      pushHome={() => routeProps.history.push('/')}
-                    />}
-                  />
-
-                  <Route path='/' component={UnknownPage} />
-                
-                </Switch>
-
+              {/* MAIN TEXT SECTION */}
+              <Switch>
+                <Route exact path='/' 
+                render={(routeProps) =>
+                  <LandingPage
+                    LoggingInBool={false} 
+                  />}
+                />
+                <Route exact path='/login' 
+                render={(routeProps) =>
+                  <LoginPage
+                  onClickBack={() =>routeProps.history.goBack()} 
+                  pushHome={() => routeProps.history.push('/')}
+                  />}
+                />
+                <Route exact path='/signup' 
+                render={(routeProps) =>
+                  <SignupPage
+                    onClickBack={() =>routeProps.history.goBack()} 
+                    pushHome={() => routeProps.history.push('/')}
+                  />}
+                />
+                <Route path='/' component={UnknownPage} />
+              </Switch>
               </main>
           </div>
         </AltInfoContext.Provider>

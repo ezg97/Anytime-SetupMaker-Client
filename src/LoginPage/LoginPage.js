@@ -1,22 +1,15 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
-
+import {withRouter} from 'react-router-dom';
 import './LoginPage.css';
 import AuthApiService from '../services/auth-api-service';
-
 import {AltInfoContext } from '../AltInfoContext';
-
-
 class LoginPage extends React.Component {
-    
     /* 
         ---------------------------------
         |            CONTEXT            |
         ---------------------------------
     */
    static contextType = AltInfoContext;
-
 
         /* 
             ---------------------------------
@@ -34,7 +27,6 @@ class LoginPage extends React.Component {
     }   
 
     //ERROR HANDLING
-
     clearError = () => {
         this.setState({
             errorClass:"message hide"
@@ -50,18 +42,15 @@ class LoginPage extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
-
         const {business_name, password } = this.state;
         AuthApiService.postLogin({
             business_name: business_name,
             password: password,
         })
         .then( res => {
-           
             if(res){
                 this.clearError();
-                const { history } = this.props;
+                const {history} = this.props;
                 history.push('/');
                 this.context.fetchDatabase();
             }
@@ -73,7 +62,7 @@ class LoginPage extends React.Component {
         })
         .catch(err => {
             this.showError('Incorrect Business Name or Password');
-        })
+        });
     }
 
     updateBusinessName = (val) => {
@@ -90,10 +79,7 @@ class LoginPage extends React.Component {
 
     render(){
 
-        
-
         return(
-            
         <div className="page-container">
             <div className='alt-back'>
                 <button className="alt-back-button" onClick={this.props.onClickBack}>&#x202D;&#10094;</button>

@@ -1,14 +1,9 @@
 import React from 'react';
-import { Route, NavLink } from 'react-router-dom';
-
+import {Route, NavLink } from 'react-router-dom';
 import TokenService from '../services/token-service';
 import LoadingPage from '../LoadingPage/LoadingPage';
-import {InfoContext } from '../InfoContext';
-
-
+import {InfoContext} from '../InfoContext';
 import './HomePage.css';
-
-
 class HomePage extends React.Component{ 
     /* 
         ---------------------------------
@@ -17,11 +12,8 @@ class HomePage extends React.Component{
     */
    static contextType = InfoContext;
 
-
     render(){
-
-        let business = this.context.businessData;
-        
+        let business = this.context.businessData; 
         //oposite from the condition used in the LandingPage Render
         if(!TokenService.hasAuthToken()){
             return(

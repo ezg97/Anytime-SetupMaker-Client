@@ -1,5 +1,5 @@
-import config from '../config'
-import TokenService from './token-service'
+import config from '../config';
+import TokenService from './token-service';
 
 const AuthApiService = {
   postUser(user) {
@@ -14,15 +14,15 @@ const AuthApiService = {
         (!res.ok)
           ? res.json().then(e => Promise.reject(e))
           : res.json()
-      )
+      );
   },
-  postLogin({ business_name, password }) {
+  postLogin({business_name, password}) {
     return fetch(`${config.API_ENDPOINT}/auth/login`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ 'user_name':business_name, password }),
+      body: JSON.stringify({'user_name':business_name, password}),
     })
       .then(res =>
         (!res.ok)
@@ -39,10 +39,10 @@ const AuthApiService = {
         TokenService.saveAuthToken(res.authToken);
         TokenService.saveId(res.id);
         TokenService.queueCallbackBeforeExpiry(() => {
-          AuthApiService.postRefreshToken()
-        })
-        return res
-      })
+          AuthApiService.postRefreshToken();
+        });
+        return res;
+      });
   },
   postRefreshToken() {
     return fetch(`${config.API_ENDPOINT}/auth/refresh`, {
@@ -62,16 +62,16 @@ const AuthApiService = {
           ---------------------------------------------------------------------- we don't need to queue the idle timers again as the user is already logged in.
           - we'll catch the error here as this refresh is happening behind the scenes
         */
-        TokenService.saveAuthToken(res.authToken)
+        TokenService.saveAuthToken(res.authToken);
         TokenService.queueCallbackBeforeExpiry(() => {
-          AuthApiService.postRefreshToken()
-        })
-        return res
+          AuthApiService.postRefreshToken();
+        });
+        return res;
       })
       .catch(err => {
-        //error occurred
-      })
+        //err;or occurred
+      });
   },
 }
 
-export default AuthApiService
+export default AuthApiService;

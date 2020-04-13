@@ -1,19 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
+import {withRouter} from 'react-router-dom';
 import './HoursPage.css';
-
-import {InfoContext } from '../InfoContext';
-
+import {InfoContext} from '../InfoContext';
 import TokenService from '../services/token-service';
 import config from '../config';
 
-
 const { hoursPM, hoursAM } = require('../Hours');
-
-
-
-
 class HoursPage extends React.Component{ 
 
     /* 
@@ -45,9 +37,8 @@ class HoursPage extends React.Component{
         ---------------------------------
     */
     logout = () => {
-
         this.context.logout();
-        const { history } = this.props;
+        const {history} = this.props;
         history.push('/');
     }
 
@@ -66,7 +57,6 @@ class HoursPage extends React.Component{
 
     updateOpenTime = (val) => {
         this.clearAlert();
-
         if(parseInt(val) !== -1){
             this.setState({open_time: parseInt(val)});
         }
@@ -77,7 +67,6 @@ class HoursPage extends React.Component{
 
     updateCloseTime = (val) => {
         this.clearAlert();
-
         if(parseInt(val) !== -1){
             this.setState({close_time: parseInt(val)});
         }
@@ -88,39 +77,30 @@ class HoursPage extends React.Component{
 
     handleSubmit = (event) => {
         event.preventDefault();
-
         const {open_time, close_time } = this.state;
-
         //if closes before it opens AND open AND close are not closed. OR they are both closed. 
-        if( ( close_time > open_time && close_time !== -1 && open_time !== -1) || ( open_time === -1 && close_time === -1) ){
-
+        if(( close_time > open_time && close_time !== -1 && open_time !== -1) || ( open_time === -1 && close_time === -1) ){
             this.clearAlert();
-
             //if the operation data contains any data
-            if( (this.context.dayData? this.context.dayData.length : null) > 0 ){
-
+            if((this.context.dayData? this.context.dayData.length : null) > 0 ){
                 //iterate through the operation table
                 this.context.dayData.forEach(businessDay => {
-                    //verify that the day we are accessing matches the day selected
-                        
+                    //verify that the day we are accessing matches the day selected 
                         // The variables have been overridden
                         //verify that a change has been made, either to the opening our closing hour
                         if(parseInt(open_time) !== parseInt(businessDay.open_time===""? 0 : businessDay.open_time) || parseInt(close_time) !== parseInt(businessDay.close_time)){
-
                             this.patchBusinessDay(businessDay.id, open_time, close_time);
                         }
                         else{
                             //show an error noting that no change was made
                             this.showAlert('Error: No change has been made.');
                         }
-                });
-                   
+                });    
             }
             //if no info in database exists, add this to the database
             else{
                 this.addBusinessDay(open_time, close_time);  
             }
-
         }
         //if closes before its open or one is closed while the other isn't.
         else{
@@ -137,9 +117,7 @@ class HoursPage extends React.Component{
                 'table':'operation',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
-            body: JSON.stringify( 
-                { business_id: TokenService.getId(), open_time, close_time}
-            )
+            body: JSON.stringify({business_id: TokenService.getId(), open_time, close_time})
         })
         .then(res => {
             if( !res.ok ){
@@ -164,9 +142,7 @@ class HoursPage extends React.Component{
                 'table':'operation',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
-            body: JSON.stringify( 
-                { open_time, close_time}
-            )
+            body: JSON.stringify({open_time, close_time})
         })
         .then(res => {
             if( !res.ok ){
@@ -194,25 +170,20 @@ class HoursPage extends React.Component{
     |----------------------------------------------------------------------------------------------------------------------------
 
     */
-
     async componentDidMount(){
         //must use try/catch for async calls
         try{
             //await the response (aka resolve) from checkFetch
             await this.context.checkFetch();
-
             if(this.context.dayData.length > 0) {
                 this.setState({
                     open_time: parseInt(this.context.dayData[0].open_time),
                     close_time: parseInt(this.context.dayData[0].close_time)
                 });
             }
-            
-
         } catch (err){
             // error occurred
         }
-
     }
 
      /* 
@@ -221,12 +192,8 @@ class HoursPage extends React.Component{
         ---------------------------------
     */
     render(){
-
         let business = this.context.businessData;
         let operationHours = this.context.dayData;
-
-
-        
         return(
         <div className="page-container crud">
 
@@ -247,7 +214,7 @@ class HoursPage extends React.Component{
                         <select value={(operationHours.length > 0? this.state.open_time === -1? operationHours[0].open_time : this.state.open_time : this.state.open_time)}  className='hours' onChange={(e) => this.updateOpenTime(e.target.value)}> 
                             <option value='-1'>Closed</option>
 
-                            {hoursAM.map( (hour,id) =>
+                            {hoursAM.map((hour,id) =>
                                     <option key={id} value={hour.id}>{hour.time}</option>
                                 )
                             }
@@ -262,7 +229,7 @@ class HoursPage extends React.Component{
                         <select value={(operationHours.length > 0? this.state.close_time === -1? operationHours[0].close_time : this.state.close_time : this.state.close_time)} className='hours'  onChange={(e) => this.updateCloseTime(e.target.value)}>
                             <option value='-1'>Closed</option>
 
-                            {hoursPM.map( (hour,id) =>
+                            {hoursPM.map((hour,id) =>
                                     <option key={id} value={hour.id}>{hour.time}</option>
                                 )
                             }

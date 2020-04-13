@@ -1,23 +1,12 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-
+import {withRouter} from 'react-router-dom';
 import './SchedulePage.css';
-
-
-import {InfoContext } from '../InfoContext';
-
-
-//const { employees } = require('../Employees');
+import {InfoContext} from '../InfoContext';
 import TokenService from '../services/token-service';
 import config from '../config';
 
 const { hoursPM, hoursAM } = require('../Hours');
-
-
-
 class SchedulePage extends React.Component{ 
-
-
     /* 
         ---------------------------------
         |            STATE              |
@@ -38,26 +27,22 @@ class SchedulePage extends React.Component{
         };
     }
     
-
     /* 
         ---------------------------------
         |            CONTEXT            |
         ---------------------------------
     */
     static contextType = InfoContext;
-
-
     /* 
         ---------------------------------
         |            METHODS            |
         ---------------------------------
     */
    logout = () => {
-
     this.context.logout();
-    const { history } = this.props;
+    const {history} = this.props;
     history.push('/');
-}
+    }
 
    clearAlert = () => {
         this.setState({
@@ -70,69 +55,50 @@ class SchedulePage extends React.Component{
             alertClass: `message ${successClass}`,
             alertMessage: message
         });
-
     }
-
-
 
     positionButtonClicked = (pos_id, list_index, e) => {
         e.stopPropagation();
         let className = e.target.className;
         if(className.includes('clicked') ){
             e.currentTarget.className = `pos-requirement-button ${list_index}`;
-
             this.patchPosition(pos_id, false);
         }
         else{
             e.currentTarget.className += ` clicked`;
-
             this.patchPosition(pos_id, true);
         }
-
     }
 
     
     employeeButtonClicked = (emp_id, list_index, e) => {
-
         e.stopPropagation();
-
         let className = e.target.className;
-
         if(className.includes('clicked') ){
-
             e.currentTarget.className = `emp-requirement-button ${list_index}`;
-
             this.patchEmployee(emp_id, false);
         }
         else{
-
             e.currentTarget.className += ` clicked`;
-
             this.patchEmployee(emp_id, true);
         }
-
     }
 
     updateInTime = (val,id, eID) => {
-
         this.clearAlert();
-
-        let emps = this.state.employees.map( (obj,index) => {
+        let emps = this.state.employees.map((obj,index) => {
             if(index === id) {
                 obj[0] = parseInt(val);
             }
             return obj;
         });
-
         this.setState({
             employees: emps
         });
 
         //if closes before it opens AND open AND close are not closed. 
         if( parseInt(val) < emps[id][1] ){
-
-            this.clearAlert();
-                        
+            this.clearAlert();               
             //update open
             this.patchEmployeeInTime(eID, parseInt(val));
         }
@@ -142,14 +108,13 @@ class SchedulePage extends React.Component{
             this.showAlert('The opening time must come before the closing time.');
             return;
         }
-        
     }
 
     updateOutTime = (val,id,eID) => {
 
         this.clearAlert();
 
-        let emps = this.state.employees.map( (obj,index) => {
+        let emps = this.state.employees.map((obj,index) => {
             if(index === id) {
                 obj[1] = parseInt(val);
             }
@@ -358,7 +323,7 @@ class SchedulePage extends React.Component{
 
                 { (employees.length > 0 && operationHours.length > 0 && positions.length > 0)
                     
-                    ? positions.map( (position,index) => 
+                    ? positions.map((position,index) => 
                         <li key={index} className='list-element'>
 
                             {(position.pos_required)
@@ -392,7 +357,7 @@ class SchedulePage extends React.Component{
                     
                     { (employees.length > 0 && operationHours.length > 0 && positions.length > 0)
                         
-                        ? employees.map( (employee,index) => 
+                        ? employees.map((employee,index) => 
                             <li key={index} className='list-element'>
 
                                 {/* BUTTON */}
@@ -407,7 +372,7 @@ class SchedulePage extends React.Component{
                                     {/* If the operation hour list for this company is blank (an empty list) */}
                                     {operationHours.map(businessDay =>  
                                             //iterate through each hour
-                                            hoursAM.map( (hour, id) =>
+                                            hoursAM.map((hour, id) =>
                                                 //if hour fits in the hour of operations (can't open the hour the business closes)
                                                 (hour.id >= parseInt(businessDay.open_time) && hour.id < parseInt(businessDay.close_time) )
                                                     ?<option key={id} className='option-time' value={hour.id}>{hour.time}</option>
@@ -425,7 +390,7 @@ class SchedulePage extends React.Component{
                                     {/* If the operation hour list for this company is blank (an empty list) */}
                                     {operationHours.map(businessDay =>  
                                             //iterate through each hour
-                                            hoursPM.map( (hour, id) =>
+                                            hoursPM.map((hour, id) =>
                                                 //if hour fits in the hour of operations (can't close the hour the business opens)
                                                 (hour.id > parseInt(businessDay.open_time) && hour.id <= parseInt(businessDay.close_time) )
                                                     //if the hour is the employees "in time"

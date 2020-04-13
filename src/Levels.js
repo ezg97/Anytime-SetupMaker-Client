@@ -12,6 +12,6 @@ const levels = [
         level: 'High',
         id: 3
     },
-]
+];
 
-module.exports = levels
+module.exports = levels;

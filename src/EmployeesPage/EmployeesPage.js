@@ -1,15 +1,10 @@
 import React from 'react';
 import './EmployeesPage.css';
-import {InfoContext } from '../InfoContext';
+import {InfoContext} from '../InfoContext';
 import TokenService from '../services/token-service';
 import config from '../config';
-import { withRouter } from 'react-router-dom';
-
-
-
+import {withRouter} from 'react-router-dom';
 class EmployeesPage extends React.Component{ 
-
-
     /* 
         ---------------------------------
         |            STATE              |
@@ -26,7 +21,6 @@ class EmployeesPage extends React.Component{
         };
     }
     
-
     /* 
         ---------------------------------
         |            CONTEXT            |
@@ -34,16 +28,14 @@ class EmployeesPage extends React.Component{
     */
     static contextType = InfoContext;
 
-
     /* 
         ---------------------------------
         |            METHODS            |
         ---------------------------------
     */
    logout = () => {
-
         this.context.logout();
-        const { history } = this.props;
+        const {history} = this.props;
         history.push('/');
     }
 
@@ -60,8 +52,6 @@ class EmployeesPage extends React.Component{
         });
 
     }
-
-
 
         /* Handle Selected Employee:
             -- update the state to the current employee selected  */
@@ -93,12 +83,10 @@ class EmployeesPage extends React.Component{
             });
         }
         else{
-            this.setState(
-                {
-                    skill: "",
-                    id: 0
-                }
-            );
+            this.setState({
+                skill: "", 
+                id: 0
+            });
         }
     }
 
@@ -126,27 +114,21 @@ class EmployeesPage extends React.Component{
         );
     }
 
-
     handleDelete = () => {
-
         this.clearAlert();
-
         const {id } = this.state;
-
         //Verify that this employee exists before deleting
         this.context.employeeData.forEach(employee => {
             if(employee.id === id){ 
                 this.deleteEmployee(id);                
             }
-        })
+        });
     }
 
 
     handleSubmit = (event) => {
         event.preventDefault();
-
         const {emp, skill, id } = this.state;
-
         //Verify if ANY edits have been made to the employee by comparing what's in the 
         // database with what we have in state
         this.context.employeeData.forEach(employee => {
@@ -159,7 +141,7 @@ class EmployeesPage extends React.Component{
                     this.showAlert("Error: No changes have been made.");
                 }
             }
-        })
+        });
     }
     
     deleteEmployee = (id) => {
@@ -177,12 +159,9 @@ class EmployeesPage extends React.Component{
                     throw new Error(err.status);
                 });
             }
-
             this.context.updateEmployees();
-
             this.handleSelectedEmployee('None');
             this.showAlert('Successfully Deleted','success');
-
         })
         .catch(err => {
             this.showAlert("Error: Please try again later.");
@@ -198,15 +177,13 @@ class EmployeesPage extends React.Component{
                 'table':'employee',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
-            body: JSON.stringify( 
-                { emp_name: name, emp_skill  }
-            )
+            body: JSON.stringify({emp_name: name, emp_skill})
         })
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             this.showAlert('Successfully Changed','success');
             this.context.updateEmployees();
@@ -216,8 +193,6 @@ class EmployeesPage extends React.Component{
             this.logout();
         });
     }
-
-
    
     /* 
         ---------------------------------
@@ -225,10 +200,8 @@ class EmployeesPage extends React.Component{
         ---------------------------------
     */
     render(){
-
         let employees = this.context.employeeData;
-        let business = this.context.businessData;
-    
+        let business = this.context.businessData; 
         return(
         <div className="page-container crud">
             <div className='back'>
@@ -253,7 +226,7 @@ class EmployeesPage extends React.Component{
                         <select id='select-employees' onChange={(e) => this.handleSelectedEmployee(e.target.value)}>
                                 <option value="">None</option>
 
-                                {employees.map( (employee, id) => 
+                                {employees.map((employee, id) => 
                                     /* Have to test the value exists before proceeding*/
                                     <option key={id} value={employee? employee.emp_name:null}>{employee? employee.emp_name:null}</option>
                                 )}

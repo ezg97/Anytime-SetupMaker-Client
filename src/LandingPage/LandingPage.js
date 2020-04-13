@@ -1,18 +1,11 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-
+import {Route } from 'react-router-dom';
 import './LandingPage.css';
 import LoadingPage from '../LoadingPage/LoadingPage';
-
 import TokenService from '../services/token-service';
-
-
-
 class LandingPage extends React.Component{ 
     
-    
-    render(){
-        
+    render(){    
         if(TokenService.hasAuthToken()){
             return(
                 <div className="container">
@@ -20,7 +13,6 @@ class LandingPage extends React.Component{
                 </div>
             ); 
         }
-
         else{
             return(
                 <div id='landing-bg' className='page-container display'>

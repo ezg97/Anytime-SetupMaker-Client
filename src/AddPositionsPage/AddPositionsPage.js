@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {InfoContext } from '../InfoContext';
-import config from '../config'
+import {InfoContext} from '../InfoContext';
+import config from '../config';
 
-import { withRouter } from 'react-router-dom';
-import TokenService from '../services/token-service'
+import {withRouter} from 'react-router-dom';
+import TokenService from '../services/token-service';
 
 
 class AddPositionsPage extends React.Component{ 
@@ -46,7 +46,7 @@ class AddPositionsPage extends React.Component{
    logout = () => {
 
     this.context.logout();
-    const { history } = this.props;
+    const {history} = this.props;
     history.push('/');
 }
 
@@ -59,7 +59,7 @@ class AddPositionsPage extends React.Component{
     showAlert = (message, successClass='') => {
         this.setState({
             alertClass: `message ${successClass}`,
-            alertMessage: message
+            alertMessage: message,
         });
     }
 
@@ -71,12 +71,11 @@ class AddPositionsPage extends React.Component{
                 this.updatePositionExists(true);
                 matched = true;
                 this.showAlert('Error: This Position already exists.');
-                
             }
         });
 
         if(matched === false){
-            this.clearAlert()
+            this.clearAlert();
             this.updatePositionExists(false);
         }
        
@@ -90,12 +89,12 @@ class AddPositionsPage extends React.Component{
         if (val !== '') {
             this.setState(
                 {skill: parseInt(val)}
-            )
+            );
         }
         else {
             this.setState(
                 {skill: ''}
-            )
+            );
         }
         
     }
@@ -103,7 +102,7 @@ class AddPositionsPage extends React.Component{
     updateImportance = (val) => {
         this.setState(
             {importance: parseInt(val)}
-        )
+        );
     }
 
     updatePositionExists = (bool) => {
@@ -149,15 +148,13 @@ class AddPositionsPage extends React.Component{
                 'table':'position',
                 'Authorization':`bearer ${TokenService.getAuthToken()}`
             },
-            body: JSON.stringify( 
-                { business_id: parseInt(TokenService.getId()), pos_name: name, pos_importance, pos_skill }
-            )
+            body: JSON.stringify({business_id: parseInt(TokenService.getId()), pos_name: name, pos_importance, pos_skill})
         })
         .then(res => {
             if( !res.ok ){
                 return res.json().then(err => {
-                    throw new Error(err.status)
-                })
+                    throw new Error(err.status);
+                });
             }
             //show the user this action was successful
             this.showAlert('Successfully Added','success');

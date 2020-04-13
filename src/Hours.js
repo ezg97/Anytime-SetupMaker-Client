@@ -96,7 +96,7 @@ const hoursAM = [
         time: '11PM',
         id: 23
     },
-]
+];
 
 //cut out the first 12AM because you can't close before you can even open
 const hoursPM = [
@@ -196,7 +196,7 @@ const hoursPM = [
         time: '12AM',
         id: 24
     },
-]
+];
 
 const hours = [
     { 
@@ -299,6 +299,6 @@ const hours = [
         time: '12AM',
         id: 24
     },
-]
+];
 
-module.exports = { hoursAM, hoursPM, hours }
+module.exports = {hoursAM, hoursPM, hours};
